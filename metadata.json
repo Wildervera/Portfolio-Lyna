@@ -1,0 +1,7 @@
+{
+  "name": "Lyna's Premium Design Portfolio",
+  "description": "A high-end, cinematically animated design portfolio featuring smooth transitions, 3D image stacks, and a Gemini-powered AI design assistant.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
