@@ -10,7 +10,7 @@ export interface Project {
   accentColor: string;
   images: string[];
   mockup?: string;
-  type?: 'bio' | 'testimonials' | 'project';
+  type?: 'bio' | 'testimonials' | 'project' | 'hero';
   fullContent?: string;
 }
 

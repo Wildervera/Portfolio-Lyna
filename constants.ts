@@ -3,6 +3,18 @@ import { Project } from './types';
 
 export const PROJECTS: Project[] = [
   {
+    id: 0,
+    type: 'hero',
+    title: 'Lyna Seridji',
+    tags: [],
+    description: '',
+    cta: "Let's Talk",
+    backgroundColor: '#A3D5EF', // Matches the Hero component bg
+    textColor: '#000000',
+    accentColor: '#000000',
+    images: [],
+  },
+  {
     id: 1,
     title: 'From Engineer Concept To Scalable Product',
     tags: ['SaaS Product 0-1', 'Healthcare', 'B2C'],
@@ -118,5 +130,9 @@ export const GLOBAL_STYLES = `
 
   .font-sans {
     font-family: var(--font-sans);
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
   }
 `;
