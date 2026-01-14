@@ -52,7 +52,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 3,
-    title: 'Alula',
+    title: 'Proyecto 2',
     tags: ['Mobile Product/ App', 'Health', 'B2C'],
     description: 'Building A Safe And Empathetic UX For A Self-Improvement App',
     cta: 'OPEN CASE STUDY',
@@ -66,7 +66,7 @@ export const PROJECTS: Project[] = [
       'https://images.unsplash.com/photo-1512428813834-c702c7702b78?w=800&q=80'
     ],
     mockup: 'https://images.unsplash.com/photo-1551650975-87bd5e86d61e?w=600&q=80',
-    fullContent: 'Alula is a companion for those on a journey of mental wellness. The UX focuses on low-friction logging and positive reinforcement cycles, using soft gradients and rounded corners to evoke safety.'
+    fullContent: 'Proyecto 2 is a companion for those on a journey of mental wellness. The UX focuses on low-friction logging and positive reinforcement cycles, using soft gradients and rounded corners to evoke safety.'
   },
   {
     id: 4,
