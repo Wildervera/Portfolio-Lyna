@@ -1,26 +1,25 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
 import { Routes, Route, useNavigate, useMatch } from 'react-router-dom';
-import { PROJECTS, GLOBAL_STYLES } from './constants';
-import { Project } from './types';
-import { Header, NavDots } from './components/Layout';
-import ProjectDetail from './components/ProjectDetail';
-import BioSection from './components/BioSection';
-import TestimonialsSection from './components/TestimonialsSection';
-import GeminiAssistant from './components/GeminiAssistant';
-import Hero from './components/Hero';
 import { ChevronDown } from 'lucide-react';
+
+import { PROJECTS } from './data/projects';
+import { GLOBAL_STYLES } from './styles/global';
+import {
+  Header,
+  NavDots,
+  Hero,
+  TestimonialsSection,
+  ProjectDetail
+} from './components';
+import { About, Projects as ProjectsPage } from './pages';
 
 const ImageStack: React.FC<{ scrollProgress: any }> = ({ scrollProgress }) => {
   const commonRotate = { rotate: 12, rotateY: -12 };
   const projectsWithImages = PROJECTS.filter(p => [1, 2, 3].includes(p.id));
 
-  // Diagonal stack positions (matching lyna_page style)
-  // Center image at y=0, previous above-right, next below-left
-  const deltaY = 460; // Vertical spacing between images
-  const deltaX = -120; // Horizontal offset for diagonal effect
-
-  // Step calculation - hero is index 0, projects start at index 1
+  const deltaY = 460;
+  const deltaX = -120;
   const step = 1 / (PROJECTS.length - 1);
 
   return (
@@ -30,26 +29,19 @@ const ImageStack: React.FC<{ scrollProgress: any }> = ({ scrollProgress }) => {
         style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}
       >
         {projectsWithImages.map((project, index) => {
-          // Project indices in PROJECTS array: 1, 2, 3
-          // Corresponding scroll progress: step*1, step*2, step*3
-          const projectIndexInMain = project.id; // 1, 2, or 3
+          const projectIndexInMain = project.id;
           const targetProgress = projectIndexInMain * step;
 
-          // Calculate Y position based on scroll
           const y = useTransform(scrollProgress, (val: number) => {
             const diff = (targetProgress - val) / step;
             return diff * deltaY;
           });
 
-          // X offset for diagonal effect
           const x = useTransform(y, (yVal: number) => {
             return (yVal / deltaY) * deltaX;
           });
 
-          // Distance from center for opacity/scale
           const distance = useTransform(y, (val: number) => Math.abs(val));
-
-          // More visible images - higher opacity for non-centered
           const opacity = useTransform(distance, [0, 300, 600], [1, 0.7, 0.3]);
           const scale = useTransform(distance, [0, 500], [1, 0.85]);
           const zIndex = useTransform(distance, [0, 100, 500], [10, 5, 1]);
@@ -102,26 +94,18 @@ const Portfolio: React.FC = () => {
   const activeProjectId = match?.params.id;
   const activeProject = activeProjectId ? PROJECTS.find(p => p.id === parseInt(activeProjectId)) : null;
 
-  // --- Scroll Logic ---
   const { scrollYProgress } = useScroll();
 
-  // Use a spring to smooth out the scroll progress for animation values
-  // This gives the "continuous smooth velocity" feel the user asked for
-  // Much faster physics (less damping, higher stiffness)
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 120, // Tuned for responsive but smooth tracking
+    stiffness: 120,
     damping: 25,
     restDelta: 0.001
   });
 
-  // Calculate generic direction for text transitions
   const prevProgress = useRef(0);
   const [direction, setDirection] = useState<'up' | 'down'>('down');
 
-  // Logic to determine which project is "active" based on scroll position
-  // We divide the total scroll range into segments
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    // Dynamic step based on PROJECTS length
     const step = 1 / (PROJECTS.length - 1);
     const newIndex = Math.min(Math.round(latest / step), PROJECTS.length - 1);
 
@@ -136,7 +120,6 @@ const Portfolio: React.FC = () => {
 
   const currentProject = PROJECTS[currentIndex];
 
-  // Manual navigation (clicking dots)
   const handleNavigate = useCallback((index: number) => {
     if (activeProject) return;
     const step = 1 / (PROJECTS.length - 1);
@@ -149,11 +132,10 @@ const Portfolio: React.FC = () => {
     });
   }, [activeProject]);
 
-  const transition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] };
+  const transition = { duration: 0.6, ease: [0.22, 1, 0.36, 1] };
 
   return (
-    // 600vh container to provide enough track for scrolling naturally
-    <div className="relative w-full h-[600vh]">
+    <div className="relative w-full h-[300vh]">
       <style>{GLOBAL_STYLES}</style>
 
       <AnimatePresence>
@@ -167,59 +149,56 @@ const Portfolio: React.FC = () => {
       </AnimatePresence>
 
       <div className="fixed inset-0 w-full h-screen overflow-hidden">
-        {/* Animated Background */}
         <motion.div
           className="absolute inset-0 z-0"
           animate={{ backgroundColor: currentProject.backgroundColor }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 0.6 }}
         />
 
         <Header
-          textColor={currentProject.textColor}
           onNavigate={handleNavigate}
           currentIndex={currentIndex}
         />
 
-        <main className="relative z-10 w-full h-full flex items-center justify-center">
-          <AnimatePresence mode="wait" custom={direction}>
+        <main className="relative z-10 w-full h-full">
+          <AnimatePresence mode="popLayout" custom={direction}>
             {currentProject.type === 'hero' ? (
               <motion.div
                 key="hero"
                 custom={direction}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0, y: -50 }}
+                exit={{ opacity: 0, y: -100 }}
                 transition={transition}
-                className="w-full h-full"
+                className="absolute w-full h-full flex items-center justify-center pt-20"
               >
                 <Hero />
               </motion.div>
-            ) : currentProject.type === 'bio' || currentProject.type === 'testimonials' ? (
+            ) : currentProject.type === 'testimonials' ? (
               <motion.div
                 key={currentProject.id}
                 custom={direction}
-                initial={{ opacity: 0, y: direction === 'down' ? 50 : -50 }}
+                initial={{ opacity: 0, y: direction === 'down' ? 100 : -100 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: direction === 'down' ? -50 : 50 }}
+                exit={{ opacity: 0, y: direction === 'down' ? -100 : 100 }}
                 transition={transition}
-                className="w-full h-full flex items-center"
+                className="absolute inset-0 w-full h-full flex items-center"
               >
-                {currentProject.type === 'bio' ? <BioSection /> : <TestimonialsSection />}
+                <TestimonialsSection />
               </motion.div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center w-full max-w-7xl mx-auto px-10 h-full">
-                {/* Left Side: TEXT (Discrete Transitions) */}
-                <div className="flex flex-col justify-center h-full">
-                  <AnimatePresence mode="wait" custom={direction}>
-                    <motion.div
-                      key={currentProject.id}
-                      custom={direction}
-                      initial={{ opacity: 0, y: direction === 'down' ? 40 : -40 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: direction === 'down' ? -40 : 40 }}
-                      transition={transition}
-                      className="flex flex-col space-y-8"
-                    >
+              <motion.div
+                key={currentProject.id}
+                custom={direction}
+                initial={{ opacity: 0, y: direction === 'down' ? 100 : -100 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: direction === 'down' ? -100 : 100 }}
+                transition={transition}
+                className="absolute inset-0 w-full h-full flex items-center"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center w-full max-w-7xl mx-auto px-10">
+                  <div className="flex flex-col justify-center h-full">
+                    <div className="flex flex-col space-y-8">
                       <h1
                         className="font-sans font-bold text-4xl sm:text-5xl lg:text-7xl leading-[1.05] tracking-tight max-w-[18ch]"
                         style={{ color: currentProject.textColor }}
@@ -256,24 +235,20 @@ const Portfolio: React.FC = () => {
                           {currentProject.cta}
                           <span className="text-lg leading-none transition-transform group-hover:translate-x-2">→</span>
                         </div>
-                        <div
-                          className="h-[1px] w-full bg-current opacity-40 transition-all group-hover:opacity-100 group-hover:h-[1.5px]"
-                        />
+                        <div className="h-[1px] w-full bg-current opacity-40 transition-all group-hover:opacity-100 group-hover:h-[1.5px]" />
                       </motion.button>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
+                    </div>
+                  </div>
 
-                {/* Right Side: IMAGES (Continuous Smooth Scroll) */}
-                <div className="relative aspect-[4/3] w-full hidden lg:flex items-center justify-center overflow-visible">
-                  <ImageStack scrollProgress={smoothProgress} />
+                  <div className="relative aspect-[4/3] w-full hidden lg:flex items-center justify-center overflow-visible">
+                    <ImageStack scrollProgress={smoothProgress} />
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             )}
           </AnimatePresence>
         </main>
 
-        {/* Navigation Dots (Continuous) */}
         <NavDots
           projects={PROJECTS}
           currentIndex={currentIndex}
@@ -293,14 +268,6 @@ const Portfolio: React.FC = () => {
             <ChevronDown size={20} />
           </motion.div>
         )}
-
-        {!currentProject.type && !activeProject && (
-          <GeminiAssistant
-            project={currentProject}
-            textColor={currentProject.textColor}
-            accentColor={currentProject.accentColor}
-          />
-        )}
       </div>
     </div>
   );
@@ -311,6 +278,8 @@ const App: React.FC = () => {
     <Routes>
       <Route path="/" element={<Portfolio />} />
       <Route path="/project/:id" element={<Portfolio />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/projects" element={<ProjectsPage />} />
     </Routes>
   );
 };
