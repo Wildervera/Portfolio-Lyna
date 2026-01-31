@@ -35,7 +35,7 @@ const Hero: React.FC = () => {
 
         {/* Left Side: Description */}
         <motion.div
-          className="absolute left-6 md:left-12 lg:left-20 bottom-[20%] md:bottom-[25%] max-w-[200px] md:max-w-[280px] text-left z-20 pointer-events-auto"
+          className="absolute left-[11.5vw] bottom-[20%] md:bottom-[25%] max-w-[200px] md:max-w-[280px] text-left z-20 pointer-events-auto"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
