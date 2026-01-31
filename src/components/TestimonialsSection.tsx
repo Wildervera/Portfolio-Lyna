@@ -39,26 +39,26 @@ const TestimonialsSection: React.FC = () => {
   ];
 
   return (
-    <section className="w-full py-10 md:py-16 px-4 md:px-8">
+    <section className="w-full py-8 sm:py-10 md:py-16 px-4 sm:px-6 md:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Section Title */}
-        <h2 className="text-lg md:text-xl font-bold text-center text-black mb-8 md:mb-12">
+        <h2 className="text-base sm:text-lg md:text-xl font-bold text-center text-black mb-6 sm:mb-8 md:mb-12">
           What It's Like To Work With Me
         </h2>
 
-        {/* Testimonials Grid - 3 columns on desktop */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-          {/* First row - 3 cards */}
+        {/* Testimonials Grid - 1 col mobile, 2 cols tablet, 3 cols desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
+          {/* First 3 cards */}
           {testimonials.slice(0, 3).map((t, i) => (
             <div
               key={i}
-              className="bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100 flex flex-col"
+              className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-100 flex flex-col"
             >
-              <p className="text-gray-600 text-xs md:text-sm leading-relaxed mb-6 flex-grow">
+              <p className="text-gray-600 text-xs sm:text-xs md:text-sm leading-relaxed mb-4 sm:mb-6 flex-grow line-clamp-6 sm:line-clamp-none">
                 "{t.text}"
               </p>
               <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden mb-2">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full overflow-hidden mb-2">
                   <img
                     src={t.avatar}
                     alt={t.author}
@@ -72,13 +72,13 @@ const TestimonialsSection: React.FC = () => {
             </div>
           ))}
 
-          {/* Second row - 1 card aligned left */}
-          <div className="bg-white rounded-xl p-5 md:p-6 shadow-sm border border-gray-100 flex flex-col md:col-span-1">
-            <p className="text-gray-600 text-xs md:text-sm leading-relaxed mb-6 flex-grow">
+          {/* Fourth card - spans full width on tablet, single col on mobile and desktop */}
+          <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-100 flex flex-col sm:col-span-2 lg:col-span-1">
+            <p className="text-gray-600 text-xs sm:text-xs md:text-sm leading-relaxed mb-4 sm:mb-6 flex-grow">
               "{testimonials[3].text}"
             </p>
             <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden mb-2">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full overflow-hidden mb-2">
                 <img
                   src={testimonials[3].avatar}
                   alt={testimonials[3].author}

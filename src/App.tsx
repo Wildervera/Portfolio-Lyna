@@ -58,7 +58,6 @@ const ImageStack: React.FC<{ scrollProgress: any }> = ({ scrollProgress }) => {
                 zIndex,
                 ...commonRotate,
                 transformStyle: 'preserve-3d',
-                boxShadow: '0 40px 80px -20px rgba(0, 0, 0, 0.5)',
               }}
             >
               <motion.div
@@ -97,9 +96,9 @@ const Portfolio: React.FC = () => {
   const { scrollYProgress } = useScroll();
 
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 25,
-    restDelta: 0.001
+    stiffness: 80,
+    damping: 30,
+    restDelta: 0.0001
   });
 
   const prevProgress = useRef(0);
@@ -132,7 +131,7 @@ const Portfolio: React.FC = () => {
     });
   }, [activeProject]);
 
-  const transition = { duration: 0.6, ease: [0.22, 1, 0.36, 1] };
+  const transition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] };
 
   return (
     <div className="relative w-full h-[300vh]">
@@ -161,14 +160,14 @@ const Portfolio: React.FC = () => {
         />
 
         <main className="relative z-10 w-full h-full">
-          <AnimatePresence mode="popLayout" custom={direction}>
+          <AnimatePresence mode="wait" custom={direction}>
             {currentProject.type === 'hero' ? (
               <motion.div
                 key="hero"
                 custom={direction}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0, y: -100 }}
+                exit={{ opacity: 0, y: -50 }}
                 transition={transition}
                 className="absolute w-full h-full flex items-center justify-center pt-20"
               >
@@ -178,9 +177,9 @@ const Portfolio: React.FC = () => {
               <motion.div
                 key={currentProject.id}
                 custom={direction}
-                initial={{ opacity: 0, y: direction === 'down' ? 100 : -100 }}
+                initial={{ opacity: 0, y: direction === 'down' ? 50 : -50 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: direction === 'down' ? -100 : 100 }}
+                exit={{ opacity: 0, y: direction === 'down' ? -50 : 50 }}
                 transition={transition}
                 className="absolute inset-0 w-full h-full flex items-center"
               >
@@ -190,34 +189,44 @@ const Portfolio: React.FC = () => {
               <motion.div
                 key={currentProject.id}
                 custom={direction}
-                initial={{ opacity: 0, y: direction === 'down' ? 100 : -100 }}
+                initial={{ opacity: 0, y: direction === 'down' ? 30 : -30 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: direction === 'down' ? -100 : 100 }}
+                exit={{ opacity: 0, y: direction === 'down' ? -30 : 30 }}
                 transition={transition}
                 className="absolute inset-0 w-full h-full flex items-center"
               >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-center w-full max-w-7xl mx-auto px-10">
-                  <div className="flex flex-col justify-center h-full">
-                    <div className="flex flex-col space-y-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 lg:gap-20 items-center w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-10">
+                  {/* Mobile Image - shown only on small screens */}
+                  <div className="lg:hidden w-full flex justify-center mb-4">
+                    {currentProject.images?.[0] && (
+                      <img
+                        src={currentProject.images[0]}
+                        alt={currentProject.title}
+                        className="w-full max-w-[280px] sm:max-w-[360px] h-auto rounded-xl"
+                      />
+                    )}
+                  </div>
+
+                  <div className="flex flex-col justify-center h-full text-center lg:text-left">
+                    <div className="flex flex-col space-y-4 sm:space-y-6 lg:space-y-8">
                       <h1
-                        className="font-sans font-bold text-4xl sm:text-5xl lg:text-7xl leading-[1.05] tracking-tight max-w-[18ch]"
+                        className="font-sans font-bold text-2xl sm:text-4xl md:text-5xl lg:text-7xl leading-[1.05] tracking-tight max-w-[18ch] mx-auto lg:mx-0"
                         style={{ color: currentProject.textColor }}
                       >
                         {currentProject.title}
                       </h1>
                       <p
-                        className="text-lg opacity-80 max-w-md font-medium"
+                        className="text-sm sm:text-base lg:text-lg opacity-80 max-w-md font-medium mx-auto lg:mx-0"
                         style={{ color: currentProject.textColor }}
                       >
                         {currentProject.description}
                       </p>
 
-                      <div className="flex flex-wrap gap-2 py-2">
+                      <div className="flex flex-wrap gap-2 py-2 justify-center lg:justify-start">
                         {currentProject.tags?.map((tag, i) => (
                           <span
                             key={i}
-                            className="px-6 py-2 rounded-full text-[0.65rem] font-bold tracking-[0.15em] border border-current bg-white/5 backdrop-blur-md uppercase transition-all hover:bg-white/10"
-                            style={{ color: currentProject.textColor, borderColor: `${currentProject.textColor}25` }}
+                            className="px-3 sm:px-5 py-1.5 sm:py-2 rounded-full text-[0.6rem] sm:text-[0.7rem] font-semibold tracking-[0.08em] sm:tracking-[0.1em] bg-white text-gray-800 uppercase"
                           >
                             {tag}
                           </span>
@@ -225,37 +234,44 @@ const Portfolio: React.FC = () => {
                       </div>
 
                       <motion.button
-                        whileHover={{ scale: 1.02 }}
+                        whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.25)' }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => navigate(`/project/${currentProject.id}`)}
-                        className="flex flex-col gap-2 w-fit group"
+                        className="px-6 sm:px-8 py-3 sm:py-4 rounded-full text-[0.65rem] sm:text-[0.75rem] font-bold tracking-[0.12em] sm:tracking-[0.15em] uppercase bg-white/15 backdrop-blur-sm border border-white/20 w-fit mx-auto lg:mx-0 transition-all"
                         style={{ color: currentProject.textColor }}
                       >
-                        <div className="flex items-center gap-6 font-bold tracking-[0.2em] text-[0.75rem] uppercase">
-                          {currentProject.cta}
-                          <span className="text-lg leading-none transition-transform group-hover:translate-x-2">→</span>
-                        </div>
-                        <div className="h-[1px] w-full bg-current opacity-40 transition-all group-hover:opacity-100 group-hover:h-[1.5px]" />
+                        {currentProject.cta}
                       </motion.button>
                     </div>
                   </div>
 
-                  <div className="relative aspect-[4/3] w-full hidden lg:flex items-center justify-center overflow-visible">
-                    <ImageStack scrollProgress={smoothProgress} />
-                  </div>
+                  {/* Empty space for ImageStack positioning */}
+                  <div className="relative aspect-[4/3] w-full hidden lg:block" />
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* ImageStack - OUTSIDE AnimatePresence, always visible for project sections */}
+          {currentProject.type === 'project' && (
+            <div className="absolute inset-0 w-full h-full pointer-events-none hidden lg:flex items-center justify-end pr-10">
+              <div className="relative w-[45%] aspect-[4/3] flex items-center justify-center overflow-visible">
+                <ImageStack scrollProgress={smoothProgress} />
+              </div>
+            </div>
+          )}
         </main>
 
-        <NavDots
-          projects={PROJECTS}
-          currentIndex={currentIndex}
-          onNavigate={handleNavigate}
-          isHovered={false}
-          onHoverChange={() => { }}
-        />
+        {/* NavDots - hidden on mobile */}
+        <div className="hidden md:block">
+          <NavDots
+            projects={PROJECTS}
+            currentIndex={currentIndex}
+            onNavigate={handleNavigate}
+            isHovered={false}
+            onHoverChange={() => { }}
+          />
+        </div>
 
         {currentIndex === 0 && !activeProject && (
           <motion.div
