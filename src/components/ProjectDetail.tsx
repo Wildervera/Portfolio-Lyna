@@ -33,10 +33,9 @@ const OverviewCard: React.FC<{ icon: string; title: string; description: string 
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-        icon === 'x' ? 'bg-red-50' : icon === 'target' ? 'bg-green-50' : 'bg-gray-100'
-      }`}>
+    <div className="flex flex-col items-center text-center gap-4 h-full">
+      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${icon === 'x' ? 'bg-red-50' : icon === 'target' ? 'bg-green-50' : 'bg-gray-100'
+        }`}>
         {getIcon()}
       </div>
       <h3 className="font-bold text-lg text-gray-900">{title}</h3>
@@ -93,9 +92,8 @@ const DesignVersionCard: React.FC<{
   <div className="bg-[#3D3D5C] rounded-2xl p-6 text-white">
     <div className="flex justify-between items-start mb-4">
       <h4 className="font-bold text-sm">{title}</h4>
-      <span className={`text-[10px] font-bold tracking-[0.1em] px-3 py-1 rounded-full uppercase ${
-        status === 'winner' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-      }`}>
+      <span className={`text-[10px] font-bold tracking-[0.1em] px-3 py-1 rounded-full uppercase ${status === 'winner' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+        }`}>
         {status}
       </span>
     </div>
@@ -226,10 +224,12 @@ const ProjectContent: React.FC<{ project: Project }> = ({ project }) => {
 
       {/* Overview Cards */}
       <section className="max-w-6xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-gray-200 pt-16">
-          <OverviewCard {...caseStudy.overview.problem} />
-          <OverviewCard {...caseStudy.overview.goal} />
-          <OverviewCard {...caseStudy.overview.role} />
+        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <OverviewCard {...caseStudy.overview.problem} />
+            <OverviewCard {...caseStudy.overview.goal} />
+            <OverviewCard {...caseStudy.overview.role} />
+          </div>
         </div>
       </section>
 
