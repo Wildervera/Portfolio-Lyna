@@ -1,7 +1,7 @@
 export const GLOBAL_STYLES = `
   :root {
     --font-serif: 'Playfair Display', Georgia, serif;
-    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -9,6 +9,7 @@ export const GLOBAL_STYLES = `
     font-family: var(--font-sans);
     scrollbar-width: none;
     -ms-overflow-style: none;
+    background: #FAF9F6;
   }
 
   body::-webkit-scrollbar {
@@ -59,5 +60,10 @@ export const GLOBAL_STYLES = `
 
   .perspective-1000 {
     perspective: 1000px;
+  }
+
+  /* Remove default link styles */
+  a {
+    text-decoration: none;
   }
 `;

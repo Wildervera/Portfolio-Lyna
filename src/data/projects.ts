@@ -8,7 +8,7 @@ export const PROJECTS: Project[] = [
     tags: [],
     description: '',
     cta: "Let's Talk",
-    backgroundColor: '#FBF9F5',
+    backgroundColor: '#FAF9F6',
     textColor: '#000000',
     accentColor: '#000000',
     images: [],
@@ -19,7 +19,7 @@ export const PROJECTS: Project[] = [
     tags: ['SaaS Platform', 'Healthcare', 'B2B'],
     description: 'Designing The "Phase 0" Foundation For A Series B Healthcare Startup To Reduce Cognitive Load And Error Rates.',
     cta: 'SEE CASE STUDY',
-    backgroundColor: '#3D3D7A',
+    backgroundColor: '#3C416C',
     textColor: '#ffffff',
     accentColor: '#ffffff',
     type: 'project',
@@ -29,36 +29,44 @@ export const PROJECTS: Project[] = [
     mockup: '/projets/thumbnail notable copy.webp',
     fullContent: 'In this project, we focused on streamlining the clinician workflow by reducing the steps required for data entry by 40%. The design system utilized high-contrast typography and subtle elevation to distinguish between critical and non-critical patient data.',
     caseStudy: {
-      heroTitle: 'From Engineering Concept to Scalable Product.',
-      heroSubtitle: 'Designing the "Phase 0" foundation for a Series B Healthcare startup to reduce cognitive load and error rates.',
+      heroTitle: 'From Engineering Concept to Scalable Product',
+      heroSubtitle: 'Designing the Phase 0 foundation for a Series B Healthcare startup to reduce cognitive load and error rates.',
       heroImage: '/projets/thumbnail notable copy.webp',
       projectInfo: [
-        { label: 'TIMELINE', value: 'OCT 2025- NOV 2025' },
-        { label: 'PLATFORM', value: 'SaaS PRODUCT 0-1' },
-        { label: 'INDUSTRY', value: 'HEALTHCARE (SERIE B)' },
-        { label: 'ROLE', value: 'LEAD PRODUCT DESIGNER' }
+        { label: 'Timeline', value: '1.5 month' },
+        { label: 'Industry', value: 'Healthcare' },
+        { label: 'Platform', value: 'SaaS Product' },
+        { label: 'Role', value: 'UX/UI designer' }
       ],
+      team: {
+        members: [
+          { name: 'Edwin Alonso' },
+          { name: 'Anis' },
+        ],
+        additionalCount: 5,
+      },
       overview: {
         problem: {
           icon: 'x',
-          title: 'The Problem',
+          title: 'Problem',
           description: 'The engineer prototype from extreme cognitive overload. Friction in the UI increased data entry errors, which directly caused revenue loss for providers.'
         },
         goal: {
           icon: 'target',
-          title: 'The Goal',
-          description: 'Design a scalable "Phase 0" platform that simplifies the workflow, builds trust in the AI backend, and drastically reduces claim processing time.'
+          title: 'Goal',
+          description: 'Design a scalable Phase 0 platform that simplifies the workflow, builds trust in the AI backend, and drastically reduces claim processing time.'
         },
-        role: {
-          icon: 'user',
-          title: 'My Role',
-          description: 'I led the full "0 to 1" design cycle: auditing the prototype, restructuring Information Architecture, and delivering the final UI system.'
+        outcome: {
+          icon: 'check',
+          title: 'Outcome',
+          description: 'The Phase 0 foundation successfully reduced onboarding time for new billing specialists and provided management with the real-time visibility they lacked.'
         }
       },
       research: {
         sectionNumber: '01',
         title: 'Who we build this for?',
         description: 'Creating detailed personas allowed me to develop a clear understanding of who I was designing for and identify the key challenges and frustrations in their product experience.',
+        cardAccentColor: '#3C416C',
         personas: [
           {
             icon: '👩‍💼',
@@ -67,7 +75,7 @@ export const PROJECTS: Project[] = [
             description: 'Needs high-level visibility into team performance to drive operational excellence'
           },
           {
-            icon: '👨‍💻',
+            icon: '🧑‍💻',
             title: 'Billing Specialist',
             subtitle: 'EXECUTION & SPEED',
             description: 'Focuses on processing volume quickly and accuracy to ensure claims get paid.'
@@ -113,7 +121,7 @@ export const PROJECTS: Project[] = [
         sectionNumber: '02',
         title: 'Structuring the Chaos',
         description: 'I organized the platform\'s structure into clear, purpose-driven zones. This hierarchy separates the "noise" of admin settings from the "signal" of day-to-day workflows.',
-        diagramImage: '/projets/notable-ia-diagram.png'
+        // diagramImage: '/projets/notable-ia-diagram.png'
       },
       iteration: {
         sectionNumber: '03',
@@ -177,11 +185,11 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 2,
-    title: 'Evoleum',
-    tags: ['E-Commerce Experience', 'Cosmetics', 'B2C'],
-    description: 'Redesigning A Cosmetic Website More Friendly User',
+    title: 'E-Commerce Redesign Focused on Improving CRO',
+    tags: ['E-Commerce', 'Beauty Industry', 'B2C'],
+    description: 'Improving product discovery, clarity, and flow to support stronger conversion performance.',
     cta: 'SEE CASE STUDY',
-    backgroundColor: '#8FAE8B',
+    backgroundColor: '#8FA790',
     textColor: '#ffffff',
     accentColor: '#ffffff',
     type: 'project',
@@ -189,72 +197,102 @@ export const PROJECTS: Project[] = [
       '/projets/thumbnail Evoleum.webp'
     ],
     mockup: '/projets/thumbnail Evoleum.webp',
-    fullContent: 'Evoleum required a digital identity that mirrored their physical luxury products. We implemented a grid-light layout with high-resolution video textures to create an immersive shopping experience.',
+    fullContent: 'Rebuilding a Monday.com plugin to streamline the quoting process for a construction company, improving clarity, speed, and accuracy in project submissions.',
     caseStudy: {
-      heroTitle: 'Evoleum',
-      heroSubtitle: 'Redesigning A Cosmetic Website to be More User-Friendly',
+      heroStyle: 'open',
+      sectionHeaderColor: '#565555',
+      heroTitle: 'Rebuilding A Monday Plugin For Clarity, Speed, And Accuracy',
+      heroSubtitle: 'Designing a structured Monday.com plugin form that helps clients submit accurate project details and enables to generate quotes efficiently.',
       heroImage: '/projets/thumbnail Evoleum.webp',
       projectInfo: [
-        { label: 'TIMELINE', value: 'MARCH 2024-MAY 2024' },
-        { label: 'PLATFORM', value: 'Ecommerce website' },
-        { label: 'INDUSTRY', value: 'COSMETICS' },
-        { label: 'ROLE', value: 'LEAD PRODUCT DESIGNER' }
+        { label: 'Timeline', value: '1 month' },
+        { label: 'Industry', value: 'Construction' },
+        { label: 'Platform', value: 'SaaS Product' },
+        { label: 'Role', value: 'UX/UI designer' }
       ],
+      team: {
+        members: [
+          { name: 'Member 1' },
+          { name: 'Member 2' },
+        ],
+        additionalCount: 3,
+      },
       overview: {
         problem: {
           icon: 'x',
-          title: 'The Problem',
-          description: 'The original website was cluttered and hard to navigate. Inconsistent branding and poor structure made it difficult for users to find key products, causing confusion and drop-offs.'
+          title: 'Problem',
+          description: 'The original plugin form was excessively long, lacked structure, and required heavy scrolling. Clients couldn\'t easily understand what information was needed, which led to inconsistent submissions and delays in generating accurate quotes.'
         },
         goal: {
           icon: 'target',
-          title: 'The Goal',
-          description: 'The goal was to redesign the site to improve clarity, simplify navigation, and create a clean, elegant layout that matched Evoleum\'s high-end image.'
+          title: 'Goal',
+          description: 'Create a clean, segmented, and intuitive form flow that guides clients step-by-step. Reduce vertical fatigue and ensure the company receives complete and accurate data to generate quotes without extra back-and-forth.'
         },
-        role: {
-          icon: 'user',
-          title: 'My Role',
-          description: 'I led the audit and redesign. I conducted heuristic analysis and competitor research, then restructured the navigation, layout, and visuals to improve usability and align with the brand.'
+        outcome: {
+          icon: 'check',
+          title: 'Outcome',
+          description: 'The redesigned form reduced vertical fatigue and made the submission process more intuitive. 70% decrease in incomplete submissions, 40% fewer data-entry errors, and a notable reduction in the time needed to generate quotes.'
         }
       },
-      approach: {
-        title: 'How I Tackled the Redesign?',
-        description: 'I looked closely at Evoleum\'s website to find what wasn\'t working. The menu had too many options, and important products were hard to find. Users had to click several times to get to what they needed. The site felt messy and confusing. The navigation bar alone had 6 categories, 2 of which had dropdown menus containing 14 different options. Also, key items were buried three clicks deep.'
+      research: {
+        sectionNumber: '01',
+        title: 'Who we build this for?',
+        description: 'Interviews with internal teams and reviews of past submissions clarified who uses the form and what they need.',
+        personas: [
+          {
+            icon: '🙋',
+            title: 'Clients submitting new project requests',
+            subtitle: 'NEED: CLARITY & GUIDANCE',
+            description: 'Need a simple, structured way to provide details without guessing what the company requires.'
+          },
+          {
+            icon: '🧑‍💻',
+            title: 'Parkaway Operations Team',
+            subtitle: 'NEED: EFFICIENCY & ACCURACY',
+            description: 'Needs complete, standardized information to generate precise quotes without repetitive follow-ups.'
+          },
+          {
+            icon: '🤷',
+            title: 'Sales Representatives',
+            subtitle: 'NEED: SPEED & CONSISTENCY',
+            description: 'Require a streamlined intake flow that reduces delays and ensures data is always formatted the same way.'
+          }
+        ]
       },
-      keyInsight: {
-        icon: 'key',
-        text: 'I knew simplification was key.'
+      keyFindings: {
+        title: 'Main Insight from research',
+        description: '',
+        keyInsight: 'Users lose track of their progress because the form presents all fields at once, causing overwhelm and incomplete submissions.',
+        findings: []
       },
-      contentSections: [
-        {
-          title: 'Simplifying the Maze',
-          description: 'The old navigation was a puzzle. I combined the "Shop" and "Needs" categories into one, with a dropdown menu that lets users easily shop based on the brand\'s offerings or their specific needs. Now, users can directly access solutions for dryness or acne, in just one click. This made the navigation cleaner and easier to use.',
-          image: '/projets/evoleum-navigation.png'
-        },
-        {
-          title: 'Highlighting What Matters',
-          description: 'Important products weren\'t easy to spot. I added a clear Best Seller section to highlight the most popular items. This helps users quickly see what others love and makes it easier to find top products.',
-          image: '/projets/evoleum-bestsellers.png'
-        }
-      ],
-      impact: {
-        title: 'The impact',
-        description: 'Before, the website was messy and hard to use. Now it\'s clean and organized. I reduced the menu from over 14 options to just a few. Bestsellers are easy to find, and the shop section is clear and focused. The new colors match the brand and feel more modern. It\'s too early for data, but a simpler site means less stress for users and a better chance they\'ll take action.'
+      strategy: {
+        sectionNumber: '02',
+        title: 'User Flow',
+        description: 'To reduce scrolling and clarify the flow, the form was restructured into four main sections: Project type, General Info, Scope & Specs, Doc & Notes.'
       },
-      quote: 'Redesigning Evoleum felt like helping a friend declutter her closet. We kept the timeless pieces, donated the rest, and made everything effortlessly findable.',
-      lessonLearned: {
-        title: 'Lesson learned',
-        description: 'This project reminded me that good design isn\'t about adding more, it\'s about removing what\'s not needed. At first, I thought more menus and buttons would help. But I realized they just created confusion. By cutting extra sections, combining menus, and giving bestsellers their own space, the site became simpler and more effective.'
+      iteration: {
+        sectionNumber: '03',
+        title: 'Iteration after testing',
+        description: 'While I designed the entire platform from scratch, I selected the document upload flow to highlight my iteration process. It\'s a clear example of how I explore different options, test assumptions, and refine the experience toward a final solution.',
+        versions: []
+      },
+      outcome: {
+        title: 'The Outcome',
+        description: 'The redesigned form reduced vertical fatigue and made the submission process more intuitive. **70% decrease in incomplete submissions, 60% fewer data-entry errors**, and a notable reduction in the time needed to generate quotes.',
+        metrics: [
+          { value: '-70%', label: 'INCOMPLETE SUBMISSIONS' },
+          { value: '-60%', label: 'DATA-ENTRY ERRORS' }
+        ]
       }
     }
   },
   {
     id: 3,
-    title: 'Alula',
+    title: 'Designing a User-Centered Coaching App Experience',
     tags: ['Mobile App', 'Healthcare', 'B2B'],
-    description: 'Building A Coaching Mental Health App MVP In 4 Weeks',
+    description: 'Creating a functional first iteration aimed at validating user needs and product viability.',
     cta: 'SEE CASE STUDY',
-    backgroundColor: '#C9C2E3',
+    backgroundColor: '#B5AEE2',
     textColor: '#ffffff',
     accentColor: '#ffffff',
     type: 'project',
@@ -268,7 +306,7 @@ export const PROJECTS: Project[] = [
     id: 4,
     type: 'testimonials',
     title: 'Testimonials',
-    backgroundColor: '#FBF9F5',
+    backgroundColor: '#FAF9F6',
     textColor: '#1a1a1a',
     accentColor: '#000000',
     description: 'What partners say about our collaboration.',

@@ -38,6 +38,16 @@ export interface ProjectInfo {
   value: string;
 }
 
+export interface TeamMember {
+  name: string;
+  avatar?: string;
+}
+
+export interface ProjectTeam {
+  members: TeamMember[];
+  additionalCount?: number;
+}
+
 export interface ContentSection {
   title: string;
   description: string;
@@ -46,20 +56,25 @@ export interface ContentSection {
 }
 
 export interface ProjectCaseStudy {
+  heroStyle?: 'card' | 'open';
+  sectionHeaderColor?: string;
   heroTitle: string;
   heroSubtitle: string;
   heroImage?: string;
   projectInfo?: ProjectInfo[];
+  team?: ProjectTeam;
   overview: {
     problem: { icon: string; title: string; description: string };
     goal: { icon: string; title: string; description: string };
-    role: { icon: string; title: string; description: string };
+    role?: { icon: string; title: string; description: string };
+    outcome?: { icon: string; title: string; description: string };
   };
   research?: {
     sectionNumber: string;
     title: string;
     description: string;
     personas: Persona[];
+    cardAccentColor?: string;
   };
   keyFindings?: {
     title: string;
