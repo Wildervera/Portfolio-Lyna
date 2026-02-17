@@ -15,7 +15,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
 
   const handleCopyEmail = async () => {
     try {
-      await navigator.clipboard.writeText('lyna@example.com');
+      await navigator.clipboard.writeText('lyna.seridji@gmail.com');
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {

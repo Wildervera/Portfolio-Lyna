@@ -40,7 +40,7 @@ const HERO_LAYOUT = {
 
 const Hero: React.FC = () => {
   return (
-    <div className="relative w-full h-full text-black overflow-hidden flex items-center justify-center" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="relative w-full h-full text-black overflow-hidden flex items-center justify-center" style={{ fontFamily: "'Inter', sans-serif", backgroundColor: '#FAF9F6' }}>
       {/* Main Content Container */}
       <div className="relative w-full h-full flex items-center justify-center">
 
@@ -109,7 +109,7 @@ const Hero: React.FC = () => {
         {/* Main Image - Centered, fully responsive */}
         <motion.div
           className="relative z-10 flex items-end justify-center pointer-events-none"
-          style={{ height: 'calc(100% - 8vh)' }}
+          style={{ height: 'calc(100% - 15vh)' }}
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}

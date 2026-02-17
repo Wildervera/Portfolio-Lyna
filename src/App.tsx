@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
 import { Routes, Route, useNavigate, useMatch } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 
@@ -13,52 +13,191 @@ import {
   ProjectDetail
 } from './components';
 import { About, Projects as ProjectsPage } from './pages';
+import { Project } from './types';
 
-const ImageStack: React.FC<{ scrollProgress: any }> = ({ scrollProgress }) => {
-  const commonRotate = { rotate: 12, rotateY: -12 };
-  const projectsWithImages = PROJECTS.filter(p => [1, 2, 3].includes(p.id));
+// Helper component for intersection observation
+const SectionObserver: React.FC<{
+  children: React.ReactNode;
+  index: number;
+  onInView: (index: number) => void;
+  className?: string;
+  id?: string;
+}> = ({ children, index, onInView, className, id }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { margin: "-30% 0px -30% 0px" });
 
-  const deltaY = 460;
-  const deltaX = -120;
-  const step = 1 / (PROJECTS.length - 1);
+  useEffect(() => {
+    if (isInView) {
+      onInView(index);
+    }
+  }, [isInView, index, onInView]);
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center pointer-events-none">
-      <div
-        className="relative w-full h-full flex items-center justify-center"
-        style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}
-      >
-        {projectsWithImages.map((project, index) => {
-          const projectIndexInMain = project.id;
-          const targetProgress = projectIndexInMain * step;
+    <div ref={ref} className={className} id={id}>
+      {children}
+    </div>
+  );
+};
 
-          const y = useTransform(scrollProgress, (val: number) => {
-            const diff = (targetProgress - val) / step;
-            return diff * deltaY;
-          });
+const ProjectSection: React.FC<{
+  project: Project;
+  navigate: (path: string) => void;
+}> = ({ project, navigate }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  });
 
-          const x = useTransform(y, (yVal: number) => {
-            return (yVal / deltaY) * deltaX;
-          });
+  // Calculate transforms based on scroll progress to mimic original parallax feel
+  // Original logic: y moved up, x moved right as you scrolled past
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const x = useTransform(scrollYProgress, [0, 1], [20, -20]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [14, 10]);
+  const opacity = useTransform(scrollYProgress, [0.2, 0.5, 0.8], [0, 1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1, 0.85]);
 
-          const distance = useTransform(y, (val: number) => Math.abs(val));
-          const opacity = useTransform(distance, [0, 300, 600], [1, 0.7, 0.3]);
-          const scale = useTransform(distance, [0, 500], [1, 0.85]);
-          const zIndex = useTransform(distance, [0, 100, 500], [10, 5, 1]);
+  return (
+    <div ref={ref} className="w-full h-full flex flex-col justify-center py-16 lg:py-0 min-h-[85vh]">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 lg:gap-12 items-center w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+        {/* Mobile Image */}
+        <div className="lg:hidden w-full flex justify-center mb-4">
+          {project.images?.[0] && (
+            <img
+              src={project.images[0]}
+              alt={project.title}
+              className="w-full max-w-[280px] sm:max-w-[360px] h-auto rounded-3xl shadow-lg"
+            />
+          )}
+        </div>
 
-          return (
+        {/* Text Content */}
+        <div className="flex flex-col justify-center h-full text-center lg:text-left" style={{ padding: '0 12px' }}>
+          <div className="flex flex-col" style={{ gap: '32px' }}>
+            <div className="flex flex-col" style={{ gap: '12px' }}>
+              <motion.h1
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="capitalize max-w-[477px] mx-auto lg:mx-0"
+                style={{
+                  fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                  fontWeight: 590,
+                  fontSize: 'clamp(28px, 4vw, 45px)',
+                  lineHeight: '130%',
+                  color: project.textColor || '#FFFFFF',
+                }}
+              >
+                {project.title}
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="max-w-[477px] mx-auto lg:mx-0"
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 400,
+                  fontSize: '25px',
+                  lineHeight: '150%',
+                  color: project.textColor || '#FFFFFF',
+                }}
+              >
+                {project.description}
+              </motion.p>
+            </div>
+
+            {/* Tags */}
             <motion.div
-              key={project.id}
-              className="absolute w-[600px] h-[420px] rounded-lg overflow-hidden origin-center"
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex flex-wrap gap-[10px] justify-center lg:justify-start"
+            >
+              {project.tags?.map((tag, i) => (
+                <span
+                  key={i}
+                  className="capitalize"
+                  style={{
+                    padding: '0 12px',
+                    height: '26px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    borderRadius: '12px',
+                    background: '#FFFFFF',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 400,
+                    fontSize: '16px',
+                    lineHeight: '162.5%',
+                    color: '#000000',
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* CTA Button */}
+          <motion.button
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => navigate(`/project/${project.id}`)}
+            className="w-fit mx-auto lg:mx-0"
+            style={{
+              marginTop: '45px',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '14px 21px',
+              gap: '8px',
+              width: '189px',
+              height: '43px',
+              background: 'rgba(255, 255, 255, 0.12)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              boxShadow: '0px 1px 4px rgba(0,0,0,0.08), inset 0px 1px 0px rgba(255,255,255,0.2)',
+              borderRadius: '100px',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
+              cursor: 'pointer',
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 600,
+              fontSize: '15px',
+              lineHeight: '20px',
+              letterSpacing: '-0.1px',
+              textTransform: 'uppercase',
+              color: project.textColor || '#FFFFFF',
+            }}
+          >
+            {project.cta}
+          </motion.button>
+        </div>
+
+        {/* Desktop Image */}
+        <div className="hidden lg:flex justify-end items-center h-full w-full pr-10" style={{ perspective: '1200px' }}>
+          {project.images?.[0] && (
+            <motion.div
+              className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl cursor-pointer origin-center"
               style={{
-                x,
+                transformStyle: 'preserve-3d',
+                rotate,
+                rotateY: -12,
                 y,
+                x,
                 opacity,
                 scale,
-                zIndex,
-                ...commonRotate,
-                transformStyle: 'preserve-3d',
               }}
+              whileHover={{ scale: 1.05, rotate: 10, rotateY: -10 }}
+              onClick={() => navigate(`/project/${project.id}`)}
             >
               <motion.div
                 className="w-full h-full"
@@ -68,19 +207,17 @@ const ImageStack: React.FC<{ scrollProgress: any }> = ({ scrollProgress }) => {
                   repeat: Infinity,
                   repeatType: "reverse",
                   ease: "easeInOut",
-                  delay: index * 0.5
                 }}
               >
                 <img
                   src={project.images[0]}
-                  className="w-full h-full object-cover rounded-lg"
                   alt={project.title}
-                  loading="eager"
+                  className="w-full h-full object-cover"
                 />
               </motion.div>
             </motion.div>
-          );
-        })}
+          )}
+        </div>
       </div>
     </div>
   );
@@ -93,49 +230,26 @@ const Portfolio: React.FC = () => {
   const activeProjectId = match?.params.id;
   const activeProject = activeProjectId ? PROJECTS.find(p => p.id === parseInt(activeProjectId)) : null;
 
-  const { scrollYProgress } = useScroll();
-
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 30,
-    restDelta: 0.0001
-  });
-
-  const prevProgress = useRef(0);
-  const [direction, setDirection] = useState<'up' | 'down'>('down');
-
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    const step = 1 / (PROJECTS.length - 1);
-    const newIndex = Math.min(Math.round(latest / step), PROJECTS.length - 1);
-
-    if (latest > prevProgress.current) setDirection('down');
-    else if (latest < prevProgress.current) setDirection('up');
-    prevProgress.current = latest;
-
-    if (newIndex !== currentIndex) {
-      setCurrentIndex(newIndex);
+  const handleNavigate = (index: number) => {
+    const element = document.getElementById(`section-${index}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
-  });
+  };
 
-  const currentProject = PROJECTS[currentIndex];
-
-  const handleNavigate = useCallback((index: number) => {
-    if (activeProject) return;
-    const step = 1 / (PROJECTS.length - 1);
-    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const targetY = index * step * totalHeight;
-
-    window.scrollTo({
-      top: targetY,
-      behavior: 'smooth'
-    });
-  }, [activeProject]);
-
-  const transition = { duration: 0.8, ease: [0.16, 1, 0.3, 1] };
+  // Determine current background color based on index
+  const currentBg = PROJECTS[currentIndex]?.backgroundColor || PROJECTS[0].backgroundColor;
 
   return (
-    <div className="relative w-full h-[300vh]">
+    <div className="relative w-full min-h-screen">
       <style>{GLOBAL_STYLES}</style>
+
+      {/* Global Fixed Background */}
+      <motion.div
+        className="fixed inset-0 z-[-1]"
+        animate={{ backgroundColor: currentBg }}
+        transition={{ duration: 0.4 }}
+      />
 
       <AnimatePresence>
         {activeProject && (
@@ -147,56 +261,63 @@ const Portfolio: React.FC = () => {
         )}
       </AnimatePresence>
 
-      <div className="fixed inset-0 w-full h-screen overflow-hidden">
-        <motion.div
-          className="absolute inset-0 z-0"
-          animate={{ backgroundColor: currentProject.backgroundColor }}
-          transition={{ duration: 0.6 }}
-        />
+      <Header
+        onNavigate={handleNavigate}
+        currentIndex={currentIndex}
+      />
 
-        <Header
-          onNavigate={handleNavigate}
-          currentIndex={currentIndex}
-        />
-
-        <main className="relative z-10 w-full h-full">
-          <AnimatePresence mode="wait" custom={direction}>
-            {currentProject.type === 'hero' ? (
-              <motion.div
-                key="hero"
-                custom={direction}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0, y: -50 }}
-                transition={transition}
-                className="absolute w-full h-full flex items-center justify-center pt-20"
+      <main className="relative w-full flex flex-col">
+        {PROJECTS.map((project, index) => {
+          // Render logic based on type
+          if (project.type === 'hero') {
+            return (
+              <SectionObserver
+                key={project.id}
+                index={index}
+                onInView={setCurrentIndex}
+                id={`section-${index}`}
+                className="w-full h-screen pt-20 relative"
               >
                 <Hero />
-              </motion.div>
-            ) : currentProject.type === 'testimonials' ? (
-              <motion.div
-                key={currentProject.id}
-                custom={direction}
-                initial={{ opacity: 0, y: direction === 'down' ? 50 : -50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: direction === 'down' ? -50 : 50 }}
-                transition={transition}
-                className="absolute inset-0 w-full h-full"
+                <motion.div
+                  animate={{ y: [0, 10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute bottom-2 left-[45%] z-50 flex flex-col items-center gap-2 opacity-30 pointer-events-none"
+                  style={{ color: '#000000' }}
+                >
+                  <span className="text-[0.6rem] font-bold tracking-[0.3em] uppercase">Scroll to see more</span>
+                  <ChevronDown size={20} />
+                </motion.div>
+              </SectionObserver>
+            );
+          }
+
+          if (project.type === 'testimonials') {
+            return (
+              <SectionObserver
+                key={project.id}
+                index={index}
+                onInView={setCurrentIndex}
+                id={`section-${index}`}
+                className="w-full min-h-screen relative"
               >
                 <TestimonialsSection />
-              </motion.div>
-            ) : (
-              <motion.div
-                key={currentProject.id}
-                custom={direction}
-                initial={{ opacity: 0, y: direction === 'down' ? 30 : -30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: direction === 'down' ? -30 : 30 }}
-                transition={transition}
-                className="absolute inset-0 w-full h-full flex flex-col"
-              >
-                {/* Featured Projects Header — mismo estilo que proyecto 1 (texto blanco) */}
-                <div className="w-full text-center pt-6 pb-2">
+              </SectionObserver>
+            );
+          }
+
+          // Default: Project Section
+          return (
+            <SectionObserver
+              key={project.id}
+              index={index}
+              onInView={setCurrentIndex}
+              id={`section-${index}`}
+              className="w-full min-h-[85vh] relative flex flex-col justify-center"
+            >
+              {/* "Featured Projects" Header before the first project (index 1) */}
+              {index === 1 && (
+                <div className="absolute top-[10%] w-full text-center z-10 w-full">
                   <h2
                     className="capitalize"
                     style={{
@@ -210,153 +331,23 @@ const Portfolio: React.FC = () => {
                     Featured Projects
                   </h2>
                 </div>
+              )}
 
-                <div className="flex-1 flex items-center">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 lg:gap-12 items-center w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
-                    {/* Mobile Image - shown only on small screens */}
-                    <div className="lg:hidden w-full flex justify-center mb-4">
-                      {currentProject.images?.[0] && (
-                        <img
-                          src={currentProject.images[0]}
-                          alt={currentProject.title}
-                          className="w-full max-w-[280px] sm:max-w-[360px] h-auto rounded-3xl"
-                        />
-                      )}
-                    </div>
+              <ProjectSection project={project} navigate={navigate} />
+            </SectionObserver>
+          );
+        })}
+      </main>
 
-                    <div className="flex flex-col justify-center h-full text-center lg:text-left" style={{ padding: '0 12px' }}>
-                      <div className="flex flex-col" style={{ gap: '32px' }}>
-                        {/* Title + Description — mismo estilo que proyecto 1 (texto blanco) */}
-                        <div className="flex flex-col" style={{ gap: '12px' }}>
-                          <h1
-                            className="capitalize max-w-[477px] mx-auto lg:mx-0"
-                            style={{
-                              fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
-                              fontWeight: 590,
-                              fontSize: 'clamp(28px, 4vw, 45px)',
-                              lineHeight: '130%',
-                              color: '#FFFFFF',
-                            }}
-                          >
-                            {currentProject.title}
-                          </h1>
-                          <p
-                            className="max-w-[477px] mx-auto lg:mx-0"
-                            style={{
-                              fontFamily: "'Inter', sans-serif",
-                              fontWeight: 400,
-                              fontSize: 'clamp(16px, 2vw, 25px)',
-                              lineHeight: '150%',
-                              color: '#FFFFFF',
-                            }}
-                          >
-                            {currentProject.description}
-                          </p>
-                        </div>
-
-                        {/* Tags — mismo estilo que proyecto 1 (fondo gris oscuro, texto blanco) */}
-                        <div className="flex flex-wrap gap-[10px] justify-center lg:justify-start">
-                          {currentProject.tags?.map((tag, i) => (
-                            <span
-                              key={i}
-                              className="capitalize"
-                              style={{
-                                padding: '0 12px',
-                                height: '26px',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                borderRadius: '12px',
-                                background: '#313131',
-                                border: '1px solid rgba(255,255,255,0.2)',
-                                fontFamily: "'Inter', sans-serif",
-                                fontWeight: 400,
-                                fontSize: '16px',
-                                lineHeight: '162.5%',
-                                color: '#FFFFFF',
-                              }}
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Glossy CTA Button - fondo transparente con efecto cristalino */}
-                      <motion.button
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
-                        onClick={() => navigate(`/project/${currentProject.id}`)}
-                        className="w-fit mx-auto lg:mx-0"
-                        style={{
-                          marginTop: '45px',
-                          display: 'flex',
-                          flexDirection: 'row',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          padding: '14px 21px',
-                          gap: '8px',
-                          width: '189px',
-                          height: '43px',
-                          background: 'rgba(255, 255, 255, 0.12)',
-                          backdropFilter: 'blur(12px)',
-                          WebkitBackdropFilter: 'blur(12px)',
-                          boxShadow: '0px 1px 4px rgba(0,0,0,0.08), inset 0px 1px 0px rgba(255,255,255,0.2)',
-                          borderRadius: '100px',
-                          border: '1px solid rgba(255, 255, 255, 0.25)',
-                          cursor: 'pointer',
-                          fontFamily: "'Inter', sans-serif",
-                          fontWeight: 600,
-                          fontSize: '15px',
-                          lineHeight: '20px',
-                          letterSpacing: '-0.1px',
-                          textTransform: 'uppercase' as const,
-                          color: '#FFFFFF',
-                        }}
-                      >
-                        {currentProject.cta}
-                      </motion.button>
-                    </div>
-
-                    {/* Empty space for ImageStack positioning */}
-                    <div className="relative aspect-[4/3] w-full hidden lg:block" />
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* ImageStack - OUTSIDE AnimatePresence, always visible for project sections */}
-          {currentProject.type === 'project' && (
-            <div className="absolute inset-0 w-full h-full pointer-events-none hidden lg:flex items-center justify-end pr-10">
-              <div className="relative w-[45%] aspect-[4/3] flex items-center justify-center overflow-visible">
-                <ImageStack scrollProgress={smoothProgress} />
-              </div>
-            </div>
-          )}
-        </main>
-
-        {/* NavDots - hidden on mobile */}
-        <div className="hidden md:block">
-          <NavDots
-            projects={PROJECTS}
-            currentIndex={currentIndex}
-            onNavigate={handleNavigate}
-            isHovered={false}
-            onHoverChange={() => { }}
-          />
-        </div>
-
-        {currentIndex === 0 && !activeProject && (
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="absolute bottom-10 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 opacity-30"
-            style={{ color: currentProject.textColor }}
-          >
-            <span className="text-[0.6rem] font-bold tracking-[0.3em] uppercase">Scroll to explore</span>
-            <ChevronDown size={20} />
-          </motion.div>
-        )}
+      {/* NavDots */}
+      <div className="hidden md:block">
+        <NavDots
+          projects={PROJECTS}
+          currentIndex={currentIndex}
+          onNavigate={handleNavigate}
+          isHovered={false}
+          onHoverChange={() => { }}
+        />
       </div>
     </div>
   );
