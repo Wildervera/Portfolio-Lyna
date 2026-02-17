@@ -121,7 +121,7 @@ export const PROJECTS: Project[] = [
         sectionNumber: '02',
         title: 'Structuring the Chaos',
         description: 'I organized the platform\'s structure into clear, purpose-driven zones. This hierarchy separates the "noise" of admin settings from the "signal" of day-to-day workflows.',
-        // diagramImage: '/projets/notable-ia-diagram.png'
+        diagramImage: '/projets/project 1/MC.png'
       },
       iteration: {
         sectionNumber: '03',
@@ -131,6 +131,7 @@ export const PROJECTS: Project[] = [
           {
             title: 'V1: Inline Upload Feedback Inside the Modal',
             status: 'discarded',
+            video: '/projets/project 1/T1.mov',
             pros: [
               'Real-time status for each document',
               'Supports multiple uploads at once'
@@ -144,6 +145,7 @@ export const PROJECTS: Project[] = [
           {
             title: 'V2: Two structured Tabs: "Uploading" & "Failed"',
             status: 'winner',
+            video: '/projets/project 1/T2.mov',
             pros: [
               'Clear separation of in-progress vs. failed uploads',
               'Easier to identify and fix problematic files',
@@ -171,7 +173,8 @@ export const PROJECTS: Project[] = [
           { number: 8, title: 'Order Extraction Workspace', description: 'A clean split view between the document and extracted data helps users work more efficiently without constant context switching.' },
           { number: 9, title: 'Admin Settings Overview', description: 'A simple grid for Roles & Permissions and Work Distribution keeps configuration organized and easy to navigate.' },
           { number: 10, title: 'Roles & Permissions Matrix', description: 'Helps admins quickly understand differences between roles and adjust access with confidence.' }
-        ]
+        ],
+        demoVideo: '/projets/project 1/Final_product.mp4',
       },
       outcome: {
         title: 'The Outcome',
@@ -185,25 +188,24 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 2,
-    title: 'E-Commerce Redesign Focused on Improving CRO',
-    tags: ['E-Commerce', 'Beauty Industry', 'B2C'],
-    description: 'Improving product discovery, clarity, and flow to support stronger conversion performance.',
+    title: 'Rebuilding A Monday Plugin For Clarity, Speed, And Accuracy',
+    tags: ['SaaS Product', 'Construction', 'B2B'],
+    description: 'Designing a structured Monday.com plugin form that helps clients submit accurate project details and enables to generate quotes efficiently.',
     cta: 'SEE CASE STUDY',
-    backgroundColor: '#8FA790',
-    textColor: '#ffffff',
-    accentColor: '#ffffff',
+    backgroundColor: '#B4CAD5', // Updated for Next Project card apperance
+    textColor: '#565555',
+    accentColor: '#565555',
     type: 'project',
     images: [
-      '/projets/thumbnail Evoleum.webp'
+      '/projets/Project2/mockup.png'
     ],
-    mockup: '/projets/thumbnail Evoleum.webp',
+    mockup: '/projets/Project2/mockup.png',
     fullContent: 'Rebuilding a Monday.com plugin to streamline the quoting process for a construction company, improving clarity, speed, and accuracy in project submissions.',
     caseStudy: {
-      heroStyle: 'open',
       sectionHeaderColor: '#565555',
       heroTitle: 'Rebuilding A Monday Plugin For Clarity, Speed, And Accuracy',
       heroSubtitle: 'Designing a structured Monday.com plugin form that helps clients submit accurate project details and enables to generate quotes efficiently.',
-      heroImage: '/projets/thumbnail Evoleum.webp',
+      heroImage: '/projets/Project2/mockup.png',
       projectInfo: [
         { label: 'Timeline', value: '1 month' },
         { label: 'Industry', value: 'Construction' },
@@ -212,8 +214,8 @@ export const PROJECTS: Project[] = [
       ],
       team: {
         members: [
-          { name: 'Member 1' },
-          { name: 'Member 2' },
+          { name: 'Joseph Hernandez' },
+          { name: 'Anis' },
         ],
         additionalCount: 3,
       },
@@ -238,6 +240,8 @@ export const PROJECTS: Project[] = [
         sectionNumber: '01',
         title: 'Who we build this for?',
         description: 'Interviews with internal teams and reviews of past submissions clarified who uses the form and what they need.',
+        cardAccentColor: '#CAFA89', // Greenish accent from screenshots
+        personaImage: '/projets/Project2/persona.png',
         personas: [
           {
             icon: '🙋',
@@ -261,30 +265,73 @@ export const PROJECTS: Project[] = [
       },
       keyFindings: {
         title: 'Main Insight from research',
-        description: '',
-        keyInsight: 'Users lose track of their progress because the form presents all fields at once, causing overwhelm and incomplete submissions.',
+        description: 'Users lose track of their progress because the form presents all fields at once, causing overwhelm and incomplete submissions.',
+        keyInsight: undefined,
         findings: []
       },
       strategy: {
         sectionNumber: '02',
         title: 'User Flow',
-        description: 'To reduce scrolling and clarify the flow, the form was restructured into four main sections: Project type, General Info, Scope & Specs, Doc & Notes.'
+        description: 'To reduce scrolling and clarify the flow, the form was restructured into four main sections: Project type, General Info, Scope & Specs, Doc & Notes.',
+        diagramImage: '/projets/Project2/user_flow.png'
       },
       iteration: {
         sectionNumber: '03',
-        title: 'Iteration after testing',
-        description: 'While I designed the entire platform from scratch, I selected the document upload flow to highlight my iteration process. It\'s a clear example of how I explore different options, test assumptions, and refine the experience toward a final solution.',
-        versions: []
-      },
-      outcome: {
-        title: 'The Outcome',
-        description: 'The redesigned form reduced vertical fatigue and made the submission process more intuitive. **70% decrease in incomplete submissions, 60% fewer data-entry errors**, and a notable reduction in the time needed to generate quotes.',
-        metrics: [
-          { value: '-70%', label: 'INCOMPLETE SUBMISSIONS' },
-          { value: '-60%', label: 'DATA-ENTRY ERRORS' }
+        title: 'Wireframes',
+        description: 'We translated the new multi-step flow into low-fidelity wireframes to validate structure and clarity early on. These wireframes focused on the simplified steps, essential-first fields, and the added progress indicator, allowing us to quickly test the flow before moving into high-fidelity design. While I designed the entire platform from scratch, I selected the document upload flow to highlight my iteration process.',
+        versions: [
+          {
+            title: 'Step 1: Project Type',
+            image: '/projets/Project2/Interface 1 - PROJECT TYPE.png',
+            status: undefined,
+            pros: [],
+            cons: []
+          },
+          {
+            title: 'Step 2: General Info',
+            image: '/projets/Project2/Interface 2 - GENERAL INFO.png',
+            status: undefined,
+            pros: [],
+            cons: []
+          },
+          {
+            title: 'Step 2b: Team Details',
+            image: '/projets/Project2/Interface 2 -TEAM.png',
+            status: undefined,
+            pros: [],
+            cons: []
+          },
+          {
+            title: 'Step 3: Scope & Specs',
+            image: '/projets/Project2/Interface 3 - SCOPE & SPECS.png',
+            status: undefined,
+            pros: [],
+            cons: []
+          },
+          {
+            title: 'Step 4: Finalize',
+            image: '/projets/Project2/Interface 4 - FINALIZE.png',
+            status: undefined,
+            pros: [],
+            cons: []
+          },
+          {
+            title: 'Step 5: Confirmation',
+            image: '/projets/Project2/Interface 5 - CONFIRMATION.png',
+            status: undefined,
+            pros: [],
+            cons: []
+          }
         ]
+      },
+      solution: {
+        sectionNumber: '04',
+        title: 'The Final Design',
+        description: 'See the final result in the next section.',
+        features: [],
+        demoVideo: '' // No video provided
       }
-    }
+    },
   },
   {
     id: 3,

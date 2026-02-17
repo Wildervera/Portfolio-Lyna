@@ -4,16 +4,42 @@ import { ArrowLeft, X, Target, User, Check, TrendingUp, Key } from 'lucide-react
 import { Project, KeyFinding, ContentSection, ProjectTeam } from '../types';
 import { PROJECTS } from '../data/projects';
 
+const FadeIn: React.FC<{
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+  yOffset?: number;
+  duration?: number;
+  scale?: boolean;
+}> = ({
+  children,
+  delay = 0,
+  className,
+  yOffset = 24,
+  duration = 0.8,
+  scale = false
+}) => (
+    <motion.div
+      initial={{ opacity: 0, y: yOffset, scale: scale ? 0.96 : 1 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+
 interface ProjectDetailProps {
   project: Project;
   onBack: () => void;
   onProjectChange?: (project: Project) => void;
 }
 
-const RichText: React.FC<{ text: string; className?: string }> = ({ text, className }) => {
+const RichText: React.FC<{ text: string; className?: string; style?: React.CSSProperties }> = ({ text, className, style }) => {
   const parts = text.split(/(\*\*.*?\*\*)/g);
   return (
-    <p className={className}>
+    <p className={className} style={style}>
       {parts.map((part, i) =>
         part.startsWith('**') && part.endsWith('**')
           ? <strong key={i} className="font-semibold text-gray-900">{part.slice(2, -2)}</strong>
@@ -62,29 +88,95 @@ const OverviewCard: React.FC<{ icon: string; title: string; description: string 
 };
 
 const SectionHeader: React.FC<{ title: string; id: string; color?: string; className?: string }> = ({ title, id, color, className }) => (
-  <div id={id} className={`flex justify-center py-20 scroll-mt-24 ${className}`}>
-    <h2 style={{ color: color || '#262E71' }} className="font-sans text-[32px] md:text-[50px] font-bold leading-tight text-center">
+  <div id={id} className={`flex justify-center py-20 scroll-mt-24 ${className || ''}`}>
+    <h2
+      style={{
+        fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+        fontWeight: 510,
+        fontSize: '50px',
+        lineHeight: '60px',
+        color: color || '#262E71',
+      }}
+    >
       {title}
     </h2>
   </div>
 );
 
 const ProjectNavBar: React.FC = () => {
+  const [activeSection, setActiveSection] = useState('overview');
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['final-product', 'testing', 'development', 'research', 'overview'];
+      const container = document.querySelector('[data-scroll-container]');
+      if (!container) return;
+
+      for (const id of sections) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 160) {
+            setActiveSection(id);
+            break;
+          }
+        }
+      }
+    };
+
+    const container = document.querySelector('[data-scroll-container]');
+    if (container) {
+      container.addEventListener('scroll', handleScroll, { passive: true });
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const navItems = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'research', label: 'Research' },
+    { id: 'development', label: 'Development' },
+    { id: 'testing', label: 'Testing' },
+    { id: 'final-product', label: 'Final Product' },
+  ];
+
   return (
     <div className="flex justify-center sticky top-6 z-[190] mb-12 pointer-events-auto">
-      <div className="bg-white/90 backdrop-blur-md px-8 py-4 rounded-[45px] border border-gray-200/50 shadow-sm flex items-center gap-8 md:gap-12 overflow-x-auto max-w-[90vw]">
-        {['Overview', 'Research', 'Development', 'Testing', 'Final Product'].map((item) => (
+      <div
+        className="flex items-center justify-center overflow-x-auto"
+        style={{
+          width: '716px',
+          maxWidth: '90vw',
+          height: '73px',
+          background: '#FFFFFF',
+          border: '1px solid rgba(217, 217, 217, 0.3)',
+          borderRadius: '45px',
+          gap: '45px',
+          padding: '0 32px',
+          boxSizing: 'border-box' as const,
+        }}
+      >
+        {navItems.map((item) => (
           <button
-            key={item}
-            onClick={() => scrollTo(item.toLowerCase().replace(' ', '-'))}
-            className="text-sm md:text-lg font-medium hover:text-[#262E71] transition-colors text-gray-900 whitespace-nowrap"
+            key={item.id}
+            onClick={() => scrollTo(item.id)}
+            className="transition-colors whitespace-nowrap"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: activeSection === item.id ? 700 : 400,
+              fontSize: '18px',
+              lineHeight: '22px',
+              color: '#000000',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+            }}
           >
-            {item}
+            {item.label}
           </button>
         ))}
       </div>
@@ -96,69 +188,258 @@ const PersonaCard: React.FC<{ icon: string; title: string; subtitle: string; des
   icon, title, subtitle, description, accentColor
 }) => (
   <div
-    className={`bg-white rounded-3xl p-6 ${accentColor ? 'border border-gray-200 border-t-[5px]' : 'shadow-md'}`}
-    style={accentColor ? { borderTopColor: accentColor } : undefined}
+    className="relative flex flex-col items-center"
+    style={{
+      width: '336px',
+      height: '328px',
+      background: '#FFFFFF',
+      borderTop: `8px solid ${accentColor || '#262E71'}`,
+      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+      borderRadius: '24px',
+      boxSizing: 'border-box' as const,
+    }}
   >
-    <div className="text-5xl mb-4 text-center">{icon}</div>
-    <h4 className="font-bold text-xl text-gray-900 mb-1">{title}</h4>
-    <p className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase mb-3">{subtitle}</p>
-    <p className="text-gray-500 text-sm leading-relaxed">{description}</p>
+    {/* Emoji */}
+    <div
+      className="flex items-center justify-center"
+      style={{
+        position: 'absolute',
+        top: '34px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '65px',
+        height: '65px',
+        fontSize: '64.8px',
+        lineHeight: '78px',
+      }}
+    >
+      {icon}
+    </div>
+
+    {/* Text content */}
+    <div
+      className="flex flex-col items-start"
+      style={{
+        position: 'absolute',
+        top: '129px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: '299px',
+        padding: '0 8px',
+        gap: '17px',
+        display: 'flex',
+        boxSizing: 'border-box' as const,
+      }}
+    >
+      <h4
+        style={{
+          fontFamily: "'Inter', sans-serif",
+          fontWeight: 600,
+          fontSize: '22px',
+          lineHeight: '27px',
+          color: '#000000',
+          width: '283px',
+        }}
+      >
+        {title}
+      </h4>
+
+      <div className="flex flex-col" style={{ gap: '17px', width: '283px' }}>
+        <p
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 400,
+            fontSize: '16px',
+            lineHeight: '19px',
+            textTransform: 'uppercase' as const,
+            color: '#565555',
+          }}
+        >
+          {subtitle}
+        </p>
+        <p
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontWeight: 400,
+            fontSize: '18px',
+            lineHeight: '22px',
+            color: '#000000',
+          }}
+        >
+          {description}
+        </p>
+      </div>
+    </div>
   </div>
 );
 
 const KeyFindingQuote: React.FC<{ finding: KeyFinding; index: number }> = ({ finding, index }) => (
-  <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm">
-    <p className="text-sm text-gray-400 mb-3">Pain point {index + 1}</p>
-    <p className="text-xl font-bold text-gray-900 mb-3">"{finding.content}".</p>
+  <div
+    className="flex flex-col justify-center"
+    style={{
+      background: '#FFFFFF',
+      borderRadius: '23px',
+      padding: '24px',
+      boxSizing: 'border-box' as const,
+    }}
+  >
+    <p
+      style={{
+        fontFamily: "'Inter', sans-serif",
+        fontWeight: 500,
+        fontSize: '17px',
+        lineHeight: '150%',
+        color: '#565555',
+        marginBottom: '13px',
+      }}
+    >
+      Pain point {index + 1}
+    </p>
+    <p
+      style={{
+        fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+        fontWeight: 590,
+        fontSize: '29px',
+        lineHeight: '35px',
+        color: '#000000',
+        marginBottom: '13px',
+      }}
+    >
+      "{finding.content}".
+    </p>
     {finding.subtext && (
-      <p className="text-gray-500 text-sm">{finding.subtext}</p>
+      <p
+        style={{
+          fontFamily: "'Inter', sans-serif",
+          fontWeight: 500,
+          fontSize: '18px',
+          lineHeight: '150%',
+          color: '#000000',
+        }}
+      >
+        {finding.subtext}
+      </p>
     )}
   </div>
 );
 
 const KeyFindingStat: React.FC<{ finding: KeyFinding }> = ({ finding }) => (
-  <div className="bg-[#3D3D7A] rounded-2xl p-8 text-white flex flex-col justify-center">
-    <p className="text-4xl md:text-5xl font-bold mb-3">{finding.value}</p>
-    <p className="text-gray-300 text-sm leading-relaxed">{finding.content}</p>
+  <div
+    className="flex flex-col justify-center"
+    style={{
+      background: '#262E71',
+      borderRadius: '23px',
+      padding: '24px',
+      boxSizing: 'border-box' as const,
+    }}
+  >
+    <p
+      style={{
+        fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+        fontWeight: 510,
+        fontSize: '48px',
+        lineHeight: '58px',
+        color: '#FFFFFF',
+        marginBottom: '13px',
+      }}
+    >
+      {finding.value}
+    </p>
+    <p
+      style={{
+        fontFamily: "'Inter', sans-serif",
+        fontWeight: 500,
+        fontSize: '18px',
+        lineHeight: '150%',
+        color: '#FFFFFF',
+      }}
+    >
+      {finding.content}
+    </p>
   </div>
 );
 
 const DesignVersionCard: React.FC<{
   title: string;
-  status: 'winner' | 'discarded';
-  pros: string[];
-  cons: string[];
+  status?: 'winner' | 'discarded';
+  pros?: string[];
+  cons?: string[];
   image?: string;
-}> = ({ title, status, pros, cons, image }) => (
-  <div className="bg-[#3D3D5C] rounded-2xl p-6 text-white">
-    <div className="flex justify-between items-start mb-4">
-      <h4 className="font-bold text-sm">{title}</h4>
-      <span className={`text-[10px] font-bold tracking-[0.1em] px-3 py-1 rounded-full uppercase ${status === 'winner' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-        }`}>
-        {status}
-      </span>
-    </div>
+  video?: string;
+  variant?: 'default' | 'minimal';
+}> = ({ title, status, pros, cons, image, video, variant = 'default' }) => {
+  if (variant === 'minimal') {
+    return (
+      <div className="h-full flex flex-col">
+        {video && (
+          <div className="rounded-lg overflow-hidden w-full">
+            <video
+              src={video}
+              className="w-full h-auto rounded-lg shadow-lg"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          </div>
+        )}
+        {!video && image && (
+          <div className="rounded-lg overflow-hidden w-full">
+            <img src={image} alt={title} className="w-full h-auto rounded-lg shadow-lg" />
+          </div>
+        )}
+      </div>
+    );
+  }
 
-    {image && (
-      <div className="bg-gray-300 rounded-lg h-40 mb-6"></div>
-    )}
+  return (
+    <div className="bg-[#3D3D5C] rounded-2xl p-6 text-white h-full flex flex-col">
+      <div className="flex justify-between items-start mb-4">
+        <h4 className="font-bold text-sm">{title}</h4>
+        {status && (
+          <span className={`text-[10px] font-bold tracking-[0.1em] px-3 py-1 rounded-full uppercase ${status === 'winner' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+            }`}>
+            {status}
+          </span>
+        )}
+      </div>
 
-    <div className="space-y-2">
-      {pros.map((pro, i) => (
-        <div key={`pro-${i}`} className="flex items-start gap-2 text-sm">
-          <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
-          <span className="text-gray-200">{pro}</span>
+      {video && (
+        <div className="rounded-lg overflow-hidden mb-6">
+          <video
+            src={video}
+            className="w-full rounded-lg"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
         </div>
-      ))}
-      {cons.map((con, i) => (
-        <div key={`con-${i}`} className="flex items-start gap-2 text-sm">
-          <X className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
-          <span className="text-gray-200">{con}</span>
+      )}
+
+      {!video && image && (
+        <div className="rounded-lg overflow-hidden mb-6">
+          <img src={image} alt={title} className="w-full rounded-lg" />
         </div>
-      ))}
+      )}
+
+      <div className="space-y-2 mt-auto">
+        {pros && pros.map((pro, i) => (
+          <div key={`pro-${i}`} className="flex items-start gap-2 text-sm">
+            <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+            <span className="text-gray-200">{pro}</span>
+          </div>
+        ))}
+        {cons && cons.map((con, i) => (
+          <div key={`con-${i}`} className="flex items-start gap-2 text-sm">
+            <X className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
+            <span className="text-gray-200">{con}</span>
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const FeatureItem: React.FC<{ number: number; title: string; description: string }> = ({
   number, title, description
@@ -193,14 +474,19 @@ const LaptopMockup: React.FC<{ src: string; alt: string }> = ({ src, alt }) => (
 );
 
 const TeamAvatars: React.FC<{ team: ProjectTeam }> = ({ team }) => {
-  const colors = ['#6366f1', '#8b5cf6', '#a78bfa', '#c4b5fd', '#7c3aed'];
   return (
-    <div className="flex items-center -space-x-2">
+    <div className="flex items-center" style={{ marginLeft: '0' }}>
       {team.members.map((member, i) => (
         <div
           key={i}
-          className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-semibold"
-          style={{ backgroundColor: colors[i % colors.length], zIndex: team.members.length - i }}
+          className="rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-semibold overflow-hidden"
+          style={{
+            width: '47px',
+            height: '47px',
+            backgroundColor: '#262E71',
+            zIndex: team.members.length - i,
+            marginLeft: i > 0 ? '-11px' : '0',
+          }}
         >
           {member.avatar ? (
             <img src={member.avatar} alt={member.name} className="w-full h-full rounded-full object-cover" />
@@ -211,10 +497,26 @@ const TeamAvatars: React.FC<{ team: ProjectTeam }> = ({ team }) => {
       ))}
       {team.additionalCount && team.additionalCount > 0 && (
         <div
-          className="w-8 h-8 rounded-full border-2 border-white bg-gray-800 flex items-center justify-center text-white text-xs font-semibold"
-          style={{ zIndex: 0 }}
+          className="rounded-full border-2 border-white flex items-center justify-center"
+          style={{
+            width: '47px',
+            height: '47px',
+            backgroundColor: '#262E71',
+            zIndex: 0,
+            marginLeft: '-11px',
+          }}
         >
-          +{team.additionalCount}
+          <span
+            style={{
+              fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+              fontWeight: 590,
+              fontSize: '16px',
+              lineHeight: '19px',
+              color: '#FFFFFF',
+            }}
+          >
+            +{team.additionalCount}
+          </span>
         </div>
       )}
     </div>
@@ -265,26 +567,35 @@ const ProjectContent: React.FC<{ project: Project }> = ({ project }) => {
       {(caseStudy.research || caseStudy.strategy || caseStudy.solution) && <ProjectNavBar />}
 
       {/* Hero Section */}
-      <section className="max-w-6xl mx-auto px-6 pt-12 pb-12">
+      <section className="mx-auto px-6 pt-12 pb-12" style={{ maxWidth: '1200px' }}>
         {isNarrativeStyle ? (
           <>
             <div className="text-center max-w-4xl mx-auto mb-12">
-              <h1 className="text-5xl md:text-7xl font-serif text-gray-900 mb-6">
-                {caseStudy.heroTitle}
-              </h1>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto italic">
-                {caseStudy.heroSubtitle}
-              </p>
+              <FadeIn delay={0.1}>
+                <h1 className="text-5xl md:text-7xl font-serif text-gray-900 mb-6">
+                  {caseStudy.heroTitle}
+                </h1>
+              </FadeIn>
+              <FadeIn delay={0.2}>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto italic">
+                  {caseStudy.heroSubtitle}
+                </p>
+              </FadeIn>
             </div>
 
             {caseStudy.heroImage && (
-              <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#E8E4F0] to-[#D4CCE8] p-8 mb-12">
-                <img
-                  src={caseStudy.heroImage}
-                  alt={project.title}
-                  className="w-full max-w-2xl mx-auto rounded-2xl shadow-2xl"
-                />
-              </div>
+              <FadeIn delay={0.3} scale>
+                <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#E8E4F0] to-[#D4CCE8] p-8 mb-12">
+                  <motion.img
+                    initial={{ scale: 1.05 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 1.5, ease: "easeOut" }}
+                    src={caseStudy.heroImage}
+                    alt={project.title}
+                    className="w-full max-w-2xl mx-auto rounded-2xl shadow-2xl"
+                  />
+                </div>
+              </FadeIn>
             )}
 
             {/* Project Info Bar - Narrative */}
@@ -308,22 +619,30 @@ const ProjectContent: React.FC<{ project: Project }> = ({ project }) => {
               <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16 flex-1">
                 {/* Left: Title + Description */}
                 <div className="md:w-1/2 flex flex-col justify-center">
-                  <h1 className="text-3xl md:text-4xl lg:text-[2.8rem] font-bold text-gray-900 leading-[1.15] mb-6">
-                    {caseStudy.heroTitle}
-                  </h1>
-                  <p className="text-base text-gray-500 leading-relaxed max-w-md">
-                    {caseStudy.heroSubtitle}
-                  </p>
+                  <FadeIn delay={0.1}>
+                    <h1 className="text-3xl md:text-4xl lg:text-[2.8rem] font-bold text-gray-900 leading-[1.15] mb-6">
+                      {caseStudy.heroTitle}
+                    </h1>
+                  </FadeIn>
+                  <FadeIn delay={0.2}>
+                    <p className="text-base text-gray-500 leading-relaxed max-w-md">
+                      {caseStudy.heroSubtitle}
+                    </p>
+                  </FadeIn>
                 </div>
 
                 {/* Right: Mockup image */}
                 {caseStudy.heroImage && (
                   <div className="md:w-1/2 flex items-center justify-center">
-                    <img
-                      src={caseStudy.heroImage}
-                      alt={project.title}
-                      className="w-full max-w-md rounded-2xl"
-                    />
+                    <FadeIn delay={0.3} scale>
+                      <motion.img
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.4 }}
+                        src={caseStudy.heroImage}
+                        alt={project.title}
+                        className="w-full max-w-md rounded-2xl"
+                      />
+                    </FadeIn>
                   </div>
                 )}
               </div>
@@ -352,360 +671,794 @@ const ProjectContent: React.FC<{ project: Project }> = ({ project }) => {
             </div>
           </>
         ) : (
-          <>
-            {/* Card-style: Two-column hero card */}
-            <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100">
-              <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
-                {/* Left: Title + Description */}
-                <div className="md:w-1/2 flex flex-col justify-center">
-                  <h1 className="text-3xl md:text-4xl lg:text-[2.6rem] font-bold text-gray-900 leading-tight mb-6">
+          <FadeIn>
+            {/* Card-style: White hero card — Figma Frame 268 */}
+            <div
+              className="mx-auto w-full"
+              style={{
+                maxWidth: '1129px',
+                background: '#FFFFFF',
+                borderRadius: '24px',
+                overflow: 'hidden',
+              }}
+            >
+              {/* Content row: text + image */}
+              <div
+                className="flex flex-col md:flex-row items-center"
+                style={{ padding: '73px 35px 0', gap: '27px' }}
+              >
+                {/* Left: Title + Description — Frame 280 */}
+                <div
+                  className="flex flex-col"
+                  style={{ width: '450px', maxWidth: '100%', gap: '46px' }}
+                >
+                  <h1
+                    style={{
+                      fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                      fontWeight: 700,
+                      fontSize: '35px',
+                      lineHeight: '42px',
+                      color: caseStudy.sectionHeaderColor || caseStudy.research?.cardAccentColor || '#262E71',
+                    }}
+                  >
                     {caseStudy.heroTitle}
                   </h1>
-                  <p className="text-base text-gray-500 leading-relaxed">
+                  <p
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 400,
+                      fontSize: '25px',
+                      lineHeight: '160%',
+                      color: '#565555',
+                    }}
+                  >
                     {caseStudy.heroSubtitle}
                   </p>
                 </div>
 
-                {/* Right: Laptop Mockup */}
+                {/* Right: Thumbnail image */}
                 {caseStudy.heroImage && (
-                  <div className="md:w-1/2 flex items-center justify-center">
-                    <LaptopMockup src={caseStudy.heroImage} alt={project.title} />
+                  <div className="flex items-center justify-center flex-1">
+                    <img
+                      src={caseStudy.heroImage}
+                      alt={project.title}
+                      className="w-full"
+                      style={{
+                        maxWidth: '580px',
+                        borderRadius: '24px',
+                        transform: 'rotate(0.2deg)',
+                      }}
+                    />
                   </div>
                 )}
               </div>
 
-              {/* Project Info Bar - inside card */}
+              {/* Project Info Bar — Frame 277 */}
               {caseStudy.projectInfo && (
-                <div className="flex justify-center mt-10 pt-8 border-t border-gray-100">
-                  <div className="flex flex-wrap items-start justify-between gap-8 w-full max-w-[65%]">
-                    {caseStudy.projectInfo.map((info, i) => (
-                      <div key={i} className="flex flex-col items-center text-center">
-                        <p className="text-xs font-semibold tracking-wide text-gray-900 mb-1">
-                          {info.label}
-                        </p>
-                        <p className="text-sm text-gray-500">{info.value}</p>
-                      </div>
-                    ))}
-                    {caseStudy.team && (
-                      <div className="flex flex-col items-center text-center">
-                        <p className="text-xs font-semibold tracking-wide text-gray-900 mb-1">
-                          Team
-                        </p>
-                        <TeamAvatars team={caseStudy.team} />
-                      </div>
-                    )}
-                  </div>
+                <div
+                  className="flex flex-wrap items-start justify-center mx-auto"
+                  style={{ gap: '50px', padding: '40px 35px 50px' }}
+                >
+                  {caseStudy.projectInfo.map((info, i) => (
+                    <div key={i} className="flex flex-col" style={{ gap: '15px' }}>
+                      <p
+                        style={{
+                          fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                          fontWeight: 590,
+                          fontSize: '22px',
+                          lineHeight: '26px',
+                          color: '#565555',
+                        }}
+                      >
+                        {info.label}
+                      </p>
+                      <p
+                        style={{
+                          fontFamily: "'Inter', sans-serif",
+                          fontWeight: 500,
+                          fontSize: '18px',
+                          lineHeight: '22px',
+                          color: '#565555',
+                        }}
+                      >
+                        {info.value}
+                      </p>
+                    </div>
+                  ))}
+                  {caseStudy.team && (
+                    <div className="flex flex-col" style={{ gap: '10px' }}>
+                      <p
+                        style={{
+                          fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                          fontWeight: 590,
+                          fontSize: '22px',
+                          lineHeight: '26px',
+                          color: '#565555',
+                        }}
+                      >
+                        Team
+                      </p>
+                      <TeamAvatars team={caseStudy.team} />
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-          </>
+          </FadeIn>
         )}
       </section>
 
       {/* Overview Section */}
       <div id="overview" className="scroll-mt-32">
-        {isNarrativeStyle ? (
-          <section className="max-w-6xl mx-auto px-6 py-16">
-            <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <OverviewCard {...caseStudy.overview.problem} />
-                <OverviewCard {...caseStudy.overview.goal} />
+        <FadeIn>
+          {isNarrativeStyle ? (
+            <section className="max-w-6xl mx-auto px-6 py-16">
+              <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                  <FadeIn delay={0.1} className="h-full"><OverviewCard {...caseStudy.overview.problem} /></FadeIn>
+                  <FadeIn delay={0.2} className="h-full"><OverviewCard {...caseStudy.overview.goal} /></FadeIn>
+                  {caseStudy.overview.outcome ? (
+                    <FadeIn delay={0.3} className="h-full"><OverviewCard {...caseStudy.overview.outcome} /></FadeIn>
+                  ) : caseStudy.overview.role ? (
+                    <FadeIn delay={0.3} className="h-full"><OverviewCard {...caseStudy.overview.role} /></FadeIn>
+                  ) : null}
+                </div>
+              </div>
+            </section>
+          ) : (
+            <section className="mx-auto px-6 py-16" style={{ maxWidth: '1120px' }}>
+              {/* Overview title — SF Pro 510 50px, mismo estilo para todos los proyectos */}
+              <div className="!py-0 !mb-12 flex justify-center scroll-mt-24">
+                <h2
+                  style={{
+                    fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                    fontWeight: 510,
+                    fontSize: '50px',
+                    lineHeight: '60px',
+                    textAlign: 'center',
+                    color: caseStudy.sectionHeaderColor || caseStudy.research?.cardAccentColor || '#262E71',
+                  }}
+                >
+                  Overview
+                </h2>
+              </div>
+
+              {/* Overview rows — Frame 282 */}
+              <div
+                className="flex flex-col"
+                style={{ gap: '34px', padding: '8px', maxWidth: '1078px', margin: '0 auto' }}
+              >
+                {/* Problem */}
+                <div className="flex flex-col md:flex-row flex-wrap items-start" style={{ gap: '20px' }}>
+                  <h3
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 500,
+                      fontSize: '35px',
+                      lineHeight: '42px',
+                      color: '#000000',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {caseStudy.overview.problem.title}
+                  </h3>
+                  <p
+                    className="flex-1"
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 400,
+                      fontSize: '20px',
+                      lineHeight: '24px',
+                      color: '#595959',
+                      maxWidth: '649px',
+                    }}
+                  >
+                    {caseStudy.overview.problem.description}
+                  </p>
+                </div>
+
+                {/* Divider */}
+                <div style={{ width: '100%', height: '0px', border: '1px solid rgba(0, 0, 0, 0.1)' }} />
+
+                {/* Goal */}
+                <div className="flex flex-col md:flex-row flex-wrap items-start" style={{ gap: '20px' }}>
+                  <h3
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 500,
+                      fontSize: '35px',
+                      lineHeight: '42px',
+                      color: '#000000',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {caseStudy.overview.goal.title}
+                  </h3>
+                  <p
+                    className="flex-1"
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 400,
+                      fontSize: '20px',
+                      lineHeight: '24px',
+                      color: '#595959',
+                      maxWidth: '649px',
+                    }}
+                  >
+                    {caseStudy.overview.goal.description}
+                  </p>
+                </div>
+
+                {/* Divider */}
+                <div style={{ width: '100%', height: '0px', border: '1px solid rgba(0, 0, 0, 0.1)' }} />
+
+                {/* Outcome or Role */}
                 {caseStudy.overview.outcome ? (
-                  <OverviewCard {...caseStudy.overview.outcome} />
+                  <div className="flex flex-col md:flex-row flex-wrap items-start" style={{ gap: '20px' }}>
+                    <h3
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 500,
+                        fontSize: '35px',
+                        lineHeight: '42px',
+                        color: '#000000',
+                        flexShrink: 0,
+                      }}
+                    >
+                      {caseStudy.overview.outcome.title}
+                    </h3>
+                    <p
+                      className="flex-1"
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 400,
+                        fontSize: '20px',
+                        lineHeight: '24px',
+                        color: '#595959',
+                        maxWidth: '649px',
+                      }}
+                    >
+                      {caseStudy.overview.outcome.description}
+                    </p>
+                  </div>
                 ) : caseStudy.overview.role ? (
-                  <OverviewCard {...caseStudy.overview.role} />
+                  <div className="flex flex-col md:flex-row flex-wrap items-start" style={{ gap: '20px' }}>
+                    <h3
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 500,
+                        fontSize: '35px',
+                        lineHeight: '42px',
+                        color: '#000000',
+                        flexShrink: 0,
+                      }}
+                    >
+                      {caseStudy.overview.role.title}
+                    </h3>
+                    <p
+                      className="flex-1"
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 400,
+                        fontSize: '20px',
+                        lineHeight: '24px',
+                        color: '#595959',
+                        maxWidth: '649px',
+                      }}
+                    >
+                      {caseStudy.overview.role.description}
+                    </p>
+                  </div>
                 ) : null}
+
+                {/* Divider */}
+                <div style={{ width: '100%', height: '0px', border: '1px solid rgba(0, 0, 0, 0.1)' }} />
+
+                {/* Additional Outcome if explicit */}
+                {caseStudy.outcome && !caseStudy.overview.outcome && (
+                  <div className="flex flex-col md:flex-row flex-wrap items-start" style={{ gap: '20px' }}>
+                    <h3
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 500,
+                        fontSize: '35px',
+                        lineHeight: '42px',
+                        color: '#000000',
+                        flexShrink: 0,
+                      }}
+                    >
+                      Outcome
+                    </h3>
+                    <RichText
+                      text={caseStudy.outcome.description}
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 400,
+                        fontSize: '20px',
+                        lineHeight: '24px',
+                        color: '#595959',
+                        maxWidth: '649px',
+                      }}
+                      className="flex-1"
+                    />
+                  </div>
+                )}
               </div>
-            </div>
-          </section>
-        ) : (
-          <section className="max-w-4xl mx-auto px-6 py-16">
-            {caseStudy.sectionHeaderColor !== undefined || project.id === 1 ? (
-              <SectionHeader id="overview-header" title="Overview" color={caseStudy.sectionHeaderColor} className="!py-0 !mb-12" />
-            ) : (
-              <h2 className="text-3xl md:text-4xl font-serif italic text-gray-900 text-center mb-12">
-                Overview
-              </h2>
-            )}
-
-            <div className="divide-y divide-gray-200">
-              {/* Problem */}
-              <div className="flex flex-col md:flex-row gap-4 md:gap-16 py-8">
-                <h3 className="text-xl md:text-2xl font-bold text-gray-900 md:w-1/3 shrink-0">
-                  {caseStudy.overview.problem.title}
-                </h3>
-                <p className="text-gray-500 leading-relaxed md:w-2/3">
-                  {caseStudy.overview.problem.description}
-                </p>
-              </div>
-
-              {/* Goal */}
-              <div className="flex flex-col md:flex-row gap-4 md:gap-16 py-8">
-                <h3 className="text-xl md:text-2xl font-bold text-gray-900 md:w-1/3 shrink-0">
-                  {caseStudy.overview.goal.title}
-                </h3>
-                <p className="text-gray-500 leading-relaxed md:w-2/3">
-                  {caseStudy.overview.goal.description}
-                </p>
-              </div>
-
-              {/* Outcome or Role */}
-              {caseStudy.overview.outcome ? (
-                <div className="flex flex-col md:flex-row gap-4 md:gap-16 py-8">
-                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 md:w-1/3 shrink-0">
-                    {caseStudy.overview.outcome.title}
-                  </h3>
-                  <p className="text-gray-500 leading-relaxed md:w-2/3">
-                    {caseStudy.overview.outcome.description}
-                  </p>
-                </div>
-              ) : caseStudy.overview.role ? (
-                <div className="flex flex-col md:flex-row gap-4 md:gap-16 py-8">
-                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 md:w-1/3 shrink-0">
-                    {caseStudy.overview.role.title}
-                  </h3>
-                  <p className="text-gray-500 leading-relaxed md:w-2/3">
-                    {caseStudy.overview.role.description}
-                  </p>
-                </div>
-              ) : null}
-
-              {/* Additional Outcome if explicit (usually at bottom, but checking if legacy content left here) */}
-              {caseStudy.outcome && !caseStudy.overview.outcome && (
-                <div className="flex flex-col md:flex-row gap-4 md:gap-16 py-8">
-                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 md:w-1/3 shrink-0">
-                    Outcome
-                  </h3>
-                  <RichText
-                    text={caseStudy.outcome.description}
-                    className="text-gray-500 leading-relaxed md:w-2/3"
-                  />
-                </div>
-              )}
-            </div>
-          </section>
-        )}
+            </section>
+          )}
+        </FadeIn>
       </div>
 
       {/* Approach Section (Narrative Style) */}
-      {caseStudy.approach && (
-        <section className="max-w-4xl mx-auto px-6 py-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-            {caseStudy.approach.title}
-          </h2>
-          <p className="text-gray-600 leading-relaxed text-lg">
-            {caseStudy.approach.description}
-          </p>
-        </section>
-      )}
+      {
+        caseStudy.approach && (
+          <section className="max-w-4xl mx-auto px-6 py-16">
+            <FadeIn>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+                {caseStudy.approach.title}
+              </h2>
+              <p className="text-gray-600 leading-relaxed text-lg">
+                {caseStudy.approach.description}
+              </p>
+            </FadeIn>
+          </section>
+        )
+      }
 
       {/* Key Insight (Narrative Style) */}
-      {caseStudy.keyInsight && (
-        <section className="max-w-4xl mx-auto px-6 py-12">
-          <div className="flex items-center justify-center gap-6">
-            <Key className="w-12 h-12 text-gray-400" />
-            <p className="text-xl md:text-2xl font-medium text-gray-900">
-              {caseStudy.keyInsight.text}
-            </p>
-          </div>
-        </section>
-      )}
+      {
+        caseStudy.keyInsight && (
+          <section className="max-w-4xl mx-auto px-6 py-12">
+            <FadeIn scale>
+              <div className="flex items-center justify-center gap-6">
+                <Key className="w-12 h-12 text-gray-400" />
+                <p className="text-xl md:text-2xl font-medium text-gray-900">
+                  {caseStudy.keyInsight.text}
+                </p>
+              </div>
+            </FadeIn>
+          </section>
+        )
+      }
 
       {/* Content Sections (Narrative Style) */}
-      {caseStudy.contentSections && caseStudy.contentSections.length > 0 && (
-        <section className="max-w-6xl mx-auto px-6 py-16 space-y-24">
-          {caseStudy.contentSections.map((section, i) => (
-            <ContentSectionComponent key={i} section={section} index={i} />
-          ))}
-        </section>
-      )}
+      {
+        caseStudy.contentSections && caseStudy.contentSections.length > 0 && (
+          <section className="max-w-6xl mx-auto px-6 py-16 space-y-24">
+            {caseStudy.contentSections.map((section, i) => (
+              <ContentSectionComponent key={i} section={section} index={i} />
+            ))}
+          </section>
+        )
+      }
 
       {/* Impact Section (Narrative Style) */}
-      {caseStudy.impact && (
-        <section className="max-w-4xl mx-auto px-6 py-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-            {caseStudy.impact.title}
-          </h2>
-          <p className="text-gray-600 leading-relaxed text-lg">
-            {caseStudy.impact.description}
-          </p>
-        </section>
-      )}
+      {
+        caseStudy.impact && (
+          <section className="max-w-4xl mx-auto px-6 py-16">
+            <FadeIn>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+                {caseStudy.impact.title}
+              </h2>
+              <p className="text-gray-600 leading-relaxed text-lg">
+                {caseStudy.impact.description}
+              </p>
+            </FadeIn>
+          </section>
+        )
+      }
 
       {/* Quote (Narrative Style) */}
-      {caseStudy.quote && (
-        <section className="max-w-4xl mx-auto px-6 py-12">
-          <blockquote className="text-xl md:text-2xl font-serif italic text-gray-700 text-center border-l-4 border-[#E07A5F] pl-6 py-4">
-            {caseStudy.quote}
-          </blockquote>
-        </section>
-      )}
+      {
+        caseStudy.quote && (
+          <section className="max-w-4xl mx-auto px-6 py-12">
+            <FadeIn scale>
+              <blockquote className="text-xl md:text-2xl font-serif italic text-gray-700 text-center border-l-4 border-[#E07A5F] pl-6 py-4">
+                {caseStudy.quote}
+              </blockquote>
+            </FadeIn>
+          </section>
+        )
+      }
 
       {/* Lesson Learned (Narrative Style) */}
-      {caseStudy.lessonLearned && (
-        <section className="max-w-4xl mx-auto px-6 py-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-            {caseStudy.lessonLearned.title}
-          </h2>
-          <p className="text-gray-600 leading-relaxed text-lg">
-            {caseStudy.lessonLearned.description}
-          </p>
-        </section>
-      )}
+      {
+        caseStudy.lessonLearned && (
+          <section className="max-w-4xl mx-auto px-6 py-16">
+            <FadeIn>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+                {caseStudy.lessonLearned.title}
+              </h2>
+              <p className="text-gray-600 leading-relaxed text-lg">
+                {caseStudy.lessonLearned.description}
+              </p>
+            </FadeIn>
+          </section>
+        )
+      }
 
       {/* Research Section (Phase Style) */}
-      {caseStudy.research && (
-        <>
-          {caseStudy.sectionHeaderColor !== undefined || project.id === 1 ? <SectionHeader id="research" title="Research" color={caseStudy.sectionHeaderColor} /> : null}
-          <section className="max-w-5xl mx-auto px-6 py-16">
-            {!(caseStudy.sectionHeaderColor !== undefined || project.id === 1) && (
-              <h2 className="text-3xl md:text-4xl font-serif italic text-gray-900 text-center mb-10">
-                Research
-              </h2>
-            )}
-            <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-              {caseStudy.research.title}
-            </h3>
-            <p className="text-gray-500 max-w-3xl mb-12">
-              {caseStudy.research.description}
-            </p>
+      {
+        caseStudy.research && (
+          <>
+            <SectionHeader id="research" title="Research" color={caseStudy.sectionHeaderColor || caseStudy.research?.cardAccentColor || '#262E71'} />
+            <section className="mx-auto px-6 py-16" style={{ maxWidth: '1280px' }}>
+              <FadeIn>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {caseStudy.research.personas.map((persona, i) => (
-                <PersonaCard key={i} {...persona} accentColor={caseStudy.research!.cardAccentColor} />
-              ))}
-            </div>
-          </section>
-        </>
-      )}
+                {/* Research title + description — Frame 292 */}
+                {/* Research title + description — Frame 292 */}
+                <div className="flex flex-col" style={{ gap: '44px', maxWidth: '1200px', margin: '0 auto' }}>
+                  <div className="flex flex-col" style={{ gap: '18px' }}>
+                    <h3
+                      style={{
+                        fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                        fontWeight: 510,
+                        fontSize: '35px',
+                        lineHeight: '42px',
+                        color: '#000000',
+                      }}
+                    >
+                      {caseStudy.research.title}
+                    </h3>
+                    <p
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 400,
+                        fontSize: '18px',
+                        lineHeight: '150%',
+                        color: '#000000',
+                      }}
+                    >
+                      {caseStudy.research.description}
+                    </p>
+                  </div>
+
+                  {/* Persona Image (if present) or Cards */}
+                  {caseStudy.research.personaImage ? (
+                    <div className="w-full mt-8">
+                      <img
+                        src={caseStudy.research.personaImage}
+                        alt="Research Personas"
+                        className="w-full h-auto rounded-2xl shadow-sm"
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="flex flex-wrap items-center justify-center md:justify-start"
+                      style={{ gap: '34px', padding: '4px' }}
+                    >
+                      {caseStudy.research.personas.map((persona, i) => (
+                        <FadeIn key={i} delay={i * 0.15}>
+                          <PersonaCard {...persona} accentColor={caseStudy.research!.cardAccentColor || '#262E71'} />
+                        </FadeIn>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </FadeIn>
+            </section>
+          </>
+        )
+      }
 
       {/* Key Findings Section (Phase Style) */}
-      {caseStudy.keyFindings && (
-        <section className="max-w-5xl mx-auto px-6 py-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-            {caseStudy.keyFindings.title}
-          </h2>
-          <p className="text-gray-500 mb-12">
-            {caseStudy.keyFindings.description}
-          </p>
+      {
+        caseStudy.keyFindings && (
+          <section className="mx-auto px-6 py-16" style={{ maxWidth: '1220px' }}>
+            <FadeIn>
+              {/* Title + Description — Frame 289 header */}
+              <h2
+                style={{
+                  fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                  fontWeight: 510,
+                  fontSize: '35px',
+                  lineHeight: '42px',
+                  color: '#000000',
+                  marginBottom: '18px',
+                }}
+              >
+                {caseStudy.keyFindings.title}
+              </h2>
+              {caseStudy.keyFindings.description && (
+                <p
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 400,
+                    fontSize: '18px',
+                    lineHeight: '150%',
+                    color: '#000000',
+                    marginBottom: '48px',
+                  }}
+                >
+                  {caseStudy.keyFindings.description}
+                </p>
+              )}
 
-          {/* Paired rows: quote + stat */}
-          <div className="space-y-8">
-            {caseStudy.keyFindings.findings
-              .filter(f => f.type === 'quote')
-              .map((quote, i) => {
-                const stat = caseStudy.keyFindings!.findings.filter(f => f.type === 'stat')[i];
-                return (
-                  <div key={i} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <KeyFindingQuote finding={quote} index={i} />
-                    {stat && <KeyFindingStat finding={stat} />}
-                  </div>
-                );
-              })}
-          </div>
-        </section>
-      )}
+              {/* 2x2 Grid: quote + stat pairs — "My values" layout */}
+              {caseStudy.keyFindings.findings.length > 0 && (
+                <div
+                  className="flex flex-wrap"
+                  style={{ gap: '51px 37px', maxWidth: '1141px', margin: '0 auto' }}
+                >
+                  {caseStudy.keyFindings.findings
+                    .filter(f => f.type === 'quote')
+                    .map((quote, i) => {
+                      const stat = caseStudy.keyFindings!.findings.filter(f => f.type === 'stat')[i];
+                      return (
+                        <React.Fragment key={i}>
+                          <div style={{ width: '552px', minHeight: '200px', flex: '0 0 auto' }}>
+                            <FadeIn delay={i * 0.2}>
+                              <KeyFindingQuote finding={quote} index={i} />
+                            </FadeIn>
+                          </div>
+                          {stat && (
+                            <div style={{ width: '552px', minHeight: '200px', flex: '0 0 auto' }}>
+                              <FadeIn delay={i * 0.2 + 0.1}>
+                                <KeyFindingStat finding={stat} />
+                              </FadeIn>
+                            </div>
+                          )}
+                        </React.Fragment>
+                      );
+                    })}
+                </div>
+              )}
+            </FadeIn>
+          </section>
+        )
+      }
 
       {/* Development/Strategy Section (Phase Style) */}
-      {caseStudy.strategy && (
-        <>
-          {caseStudy.sectionHeaderColor !== undefined || project.id === 1 ? <SectionHeader id="development" title="Development" color={caseStudy.sectionHeaderColor} /> : null}
-          <section className="max-w-6xl mx-auto px-6 py-16">
-            {!(caseStudy.sectionHeaderColor !== undefined || project.id === 1) && <SectionLabel number={caseStudy.strategy.sectionNumber} title="STRATEGY" />}
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {caseStudy.strategy.title}
-            </h2>
-            <p className="text-gray-600 max-w-3xl mb-12">
-              {caseStudy.strategy.description}
-            </p>
+      {
+        caseStudy.strategy && (
+          <>
+            <SectionHeader id="development" title="Development" color={caseStudy.sectionHeaderColor || caseStudy.research?.cardAccentColor || '#262E71'} />
+            <section className="mx-auto px-6 py-16" style={{ maxWidth: '1220px' }}>
+              <FadeIn>
+                {caseStudy.strategy.sectionNumber && <SectionLabel number={caseStudy.strategy.sectionNumber} title="STRATEGY" />}
 
-            {caseStudy.strategy.diagramImage && (
-              <div className="bg-white rounded-2xl p-8 shadow-sm">
-                <img
-                  src={caseStudy.strategy.diagramImage}
-                  alt="Information Architecture"
-                  className="w-full max-w-4xl mx-auto"
-                />
-              </div>
-            )}
-          </section>
-        </>
-      )}
+                {project.id === 2 && caseStudy.strategy.diagramImage ? (
+                  // Simple 2-column layout for Project 2 Strategy (User Flow)
+                  <div className="flex flex-col md:flex-row gap-12 items-start mt-8">
+                    <div className="md:w-1/3 flex flex-col gap-6 sticky top-24">
+                      <FadeIn delay={0.1}>
+                        <h2
+                          style={{
+                            fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                            fontWeight: 510,
+                            fontSize: '35px',
+                            lineHeight: '42px',
+                            color: '#000000',
+                          }}
+                        >
+                          {caseStudy.strategy.title}
+                        </h2>
+                        <p
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontWeight: 400,
+                            fontSize: '18px',
+                            lineHeight: '150%',
+                            color: '#000000',
+                            marginTop: '24px'
+                          }}
+                        >
+                          {caseStudy.strategy.description}
+                        </p>
+                      </FadeIn>
+                    </div>
+                    <div className="md:w-2/3">
+                      <FadeIn delay={0.3} scale>
+                        <img
+                          src={caseStudy.strategy.diagramImage}
+                          alt={caseStudy.strategy.title}
+                          className="w-full h-auto rounded-2xl shadow-sm"
+                        />
+                      </FadeIn>
+                    </div>
+                  </div>
+                ) : (
+                  // Default Stacked Layout
+                  <>
+                    <h2
+                      style={{
+                        fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                        fontWeight: 510,
+                        fontSize: '35px',
+                        lineHeight: '42px',
+                        color: '#000000',
+                        marginBottom: '18px',
+                      }}
+                    >
+                      {caseStudy.strategy.title}
+                    </h2>
+                    <p
+                      style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 400,
+                        fontSize: '18px',
+                        lineHeight: '150%',
+                        color: '#000000',
+                        maxWidth: '1049px',
+                        marginBottom: '48px',
+                      }}
+                    >
+                      {caseStudy.strategy.description}
+                    </p>
+
+                    {/* IA Diagram Container — Frame 287 */}
+                    {caseStudy.strategy.diagramImage && (
+                      <div
+                        className="mx-auto"
+                        style={{
+                          maxWidth: '1178px',
+                          background: '#FFFFFF',
+                          borderRadius: '24px',
+                          padding: '57px 64px',
+                        }}
+                      >
+                        <img
+                          src={caseStudy.strategy.diagramImage}
+                          alt="Information Architecture"
+                          className="w-full mx-auto"
+                          style={{ maxWidth: '1050px', borderRadius: '24px' }}
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+              </FadeIn>
+            </section>
+          </>
+        )
+      }
 
       {/* Testing/Iteration Section (Phase Style) */}
-      {caseStudy.iteration && (
-        <>
-          {caseStudy.sectionHeaderColor !== undefined || project.id === 1 ? <SectionHeader id="testing" title="Testing" color={caseStudy.sectionHeaderColor} /> : null}
-          <section className="max-w-6xl mx-auto px-6 py-16">
-            {!(caseStudy.sectionHeaderColor !== undefined || project.id === 1) && <SectionLabel number={caseStudy.iteration.sectionNumber} title="ITERATION" />}
+      {
+        caseStudy.iteration && (
+          <>
+            <SectionHeader id="testing" title="Testing" color={caseStudy.sectionHeaderColor || caseStudy.research?.cardAccentColor || '#262E71'} />
+            <section className="mx-auto px-6 py-16" style={{ maxWidth: '1220px' }}>
+              <FadeIn>
+                {caseStudy.iteration.sectionNumber && <SectionLabel number={caseStudy.iteration.sectionNumber} title="ITERATION" />}
 
-            {caseStudy.iteration.title && (
-              <h2 className="text-3xl md:text-4xl font-serif text-center text-gray-900 mb-4">
-                {caseStudy.iteration.title}
-              </h2>
-            )}
-            {caseStudy.iteration.description && (
-              <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12">
-                {caseStudy.iteration.description}
-              </p>
-            )}
+                {caseStudy.iteration.title && (
+                  <h2
+                    style={{
+                      fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                      fontWeight: 510,
+                      fontSize: '35px',
+                      lineHeight: '42px',
+                      color: '#000000',
+                      marginBottom: '18px',
+                    }}
+                  >
+                    {caseStudy.iteration.title}
+                  </h2>
+                )}
+                {caseStudy.iteration.description && (
+                  <p
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 400,
+                      fontSize: '18px',
+                      lineHeight: '150%',
+                      color: '#000000',
+                      maxWidth: '1049px',
+                      marginBottom: '48px',
+                    }}
+                  >
+                    {caseStudy.iteration.description}
+                  </p>
+                )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {caseStudy.iteration.versions.map((version, i) => (
-                <DesignVersionCard key={i} {...version} />
-              ))}
-            </div>
-          </section>
-        </>
-      )}
+                {caseStudy.iteration.versions.length > 0 && (
+                  project.id === 2 ? (
+                    // Custom 4-column layout for Project 2
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
+                      {/* Column 1: Team (Index 2) -> Project Type (Index 0) */}
+                      <div className="flex flex-col gap-6">
+                        <FadeIn delay={0.1}>
+                          {caseStudy.iteration.versions[2] && <DesignVersionCard {...caseStudy.iteration.versions[2]} variant="minimal" />}
+                          {caseStudy.iteration.versions[0] && <DesignVersionCard {...caseStudy.iteration.versions[0]} variant="minimal" />}
+                        </FadeIn>
+                      </div>
+
+                      {/* Column 2: General Info (Index 1) */}
+                      <div className="flex flex-col gap-6">
+                        <FadeIn delay={0.2}>
+                          {caseStudy.iteration.versions[1] && <DesignVersionCard {...caseStudy.iteration.versions[1]} variant="minimal" />}
+                        </FadeIn>
+                      </div>
+
+                      {/* Column 3: Scope & Specs (Index 3) */}
+                      <div className="flex flex-col gap-6">
+                        <FadeIn delay={0.3}>
+                          {caseStudy.iteration.versions[3] && <DesignVersionCard {...caseStudy.iteration.versions[3]} variant="minimal" />}
+                        </FadeIn>
+                      </div>
+
+                      {/* Column 4: Finalize (Index 4) -> Confirmation (Index 5) */}
+                      <div className="flex flex-col gap-6">
+                        <FadeIn delay={0.4}>
+                          {caseStudy.iteration.versions[4] && <DesignVersionCard {...caseStudy.iteration.versions[4]} variant="minimal" />}
+                          {caseStudy.iteration.versions[5] && <DesignVersionCard {...caseStudy.iteration.versions[5]} variant="minimal" />}
+                        </FadeIn>
+                      </div>
+                    </div>
+                  ) : (
+                    // Standard grid for other projects
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {caseStudy.iteration.versions.map((version, i) => (
+                        <FadeIn key={i} delay={i * 0.15}>
+                          <DesignVersionCard {...version} />
+                        </FadeIn>
+                      ))}
+                    </div>
+                  )
+                )}
+              </FadeIn>
+            </section>
+          </>
+        )
+      }
 
       {/* Final Product/Solution Section (Phase Style) */}
-      {caseStudy.solution && (
-        <>
-          {caseStudy.sectionHeaderColor !== undefined || project.id === 1 ? <SectionHeader id="final-product" title="Final Product" color={caseStudy.sectionHeaderColor} /> : null}
-          <section className="max-w-6xl mx-auto px-6 py-16">
-            {!(caseStudy.sectionHeaderColor !== undefined || project.id === 1) && <SectionLabel number={caseStudy.solution.sectionNumber} title="SOLUTION" />}
-            <h2 className="text-3xl md:text-5xl font-serif text-center text-gray-900 mb-4">
-              {caseStudy.solution.title}
-            </h2>
-            <p className="text-gray-600 text-center max-w-2xl mx-auto mb-16">
-              {caseStudy.solution.description}
-            </p>
+      {
+        caseStudy.solution && (
+          <>
+            <SectionHeader id="final-product" title="Final Product" color={caseStudy.sectionHeaderColor || caseStudy.research?.cardAccentColor || '#262E71'} />
+            <section className="mx-auto px-6 py-16" style={{ maxWidth: '1220px' }}>
+              <FadeIn>
+                {caseStudy.solution.sectionNumber && <SectionLabel number={caseStudy.solution.sectionNumber} title="SOLUTION" />}
+                <h2 className="text-3xl md:text-5xl font-serif text-center text-gray-900 mb-4">
+                  {caseStudy.solution.title}
+                </h2>
+                <p className="text-gray-600 text-center max-w-2xl mx-auto mb-16">
+                  {caseStudy.solution.description}
+                </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
-              {caseStudy.solution.features.map((feature) => (
-                <FeatureItem key={feature.number} {...feature} />
-              ))}
-            </div>
-          </section>
-        </>
-      )}
+                {caseStudy.solution.demoVideo && (
+                  <div
+                    className="mx-auto mb-16"
+                    style={{
+                      maxWidth: '1178px',
+                      background: '#FFFFFF',
+                      borderRadius: '24px',
+                      padding: '24px',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <video
+                      src={caseStudy.solution.demoVideo}
+                      className="w-full rounded-2xl"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                    />
+                  </div>
+                )}
 
-      {/* Outcome Section (Phase Style with Metrics) */}
-      {caseStudy.outcome && (
-        <section className="max-w-4xl mx-auto px-6 py-16">
-          <div className="bg-[#FBF7F3] rounded-3xl p-12 text-center">
-            <h2 className="text-3xl md:text-4xl font-serif text-gray-900 mb-4">
-              {caseStudy.outcome.title}
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto mb-12">
-              {caseStudy.outcome.description}
-            </p>
-
-            <div className="flex justify-center gap-16 flex-wrap">
-              {caseStudy.outcome.metrics.map((metric, i) => (
-                <div key={i} className="text-center">
-                  <p className="text-5xl md:text-6xl font-bold text-gray-900 mb-2">{metric.value}</p>
-                  <p className="text-[#E07A5F] text-xs font-bold tracking-[0.15em] uppercase">{metric.label}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
+                  {caseStudy.solution.features.map((feature, i) => (
+                    <FadeIn key={feature.number} delay={i * 0.1}>
+                      <FeatureItem {...feature} />
+                    </FadeIn>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-    </div>
+              </FadeIn>
+            </section>
+          </>
+        )
+      }
+
+      {/* Outcome Section removed as per request */}
+
+    </div >
   );
 };
+
 
 const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onBack, onProjectChange }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -773,7 +1526,7 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onBack, onProjec
         setTimeout(() => {
           // First scroll to top instantly but keep opacity at 0
           if (containerRef.current) {
-            containerRef.current.scrollTo({ top: 0, behavior: 'instant' });
+            containerRef.current.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
           }
 
           // Then update project which will trigger fade in animation
@@ -832,11 +1585,12 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onBack, onProjec
       {/* Single scrollable container */}
       <div
         ref={containerRef}
+        data-scroll-container
         className="h-full overflow-y-auto overflow-x-hidden"
         style={{ scrollbarGutter: 'stable' }}
       >
         {/* Spacer for fixed button */}
-        <div className="h-20 bg-[#FBF9F5]" />
+        <div className="h-20" style={{ background: '#FAF9F6' }} />
 
         {/* Current project content */}
         <AnimatePresence mode="wait">
@@ -851,48 +1605,151 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onBack, onProjec
           </motion.div>
         </AnimatePresence>
 
-        {/* "Let's work together" / End section */}
-        <section className="bg-gray-900 text-white py-20">
-          <div className="max-w-4xl mx-auto px-6">
-            <h2 className="text-4xl md:text-5xl font-serif mb-8">Let's work together!</h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="font-bold mb-2">Enjoyed the journey?</h3>
-              </div>
-              <div>
-                <p className="text-gray-300">
-                  Hit me up at{' '}
-                  <a href="mailto:lyna@example.com" className="underline hover:text-white">
-                    lyna@example.com
-                  </a>{' '}
-                  and let's embark on a new design adventure together!
+        {/* Next Project Section — Frame 293 */}
+        <section
+          className="relative w-full flex flex-col items-center justify-center"
+          style={{
+            minHeight: '595px',
+            backgroundColor: nextProject.backgroundColor || '#B4CAD5',
+            padding: '20px 0',
+          }}
+        >
+          {/* "Next Project" label */}
+          <p
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 700,
+              fontSize: '25px',
+              lineHeight: '150%',
+              color: '#FFFFFF',
+              marginBottom: '40px',
+            }}
+          >
+            Next Project
+          </p>
+
+          {/* Content row — Frame 294 */}
+          <div
+            className="flex flex-col md:flex-row items-center justify-center mx-auto"
+            style={{ maxWidth: '1171px', gap: '75px', padding: '0 24px' }}
+          >
+            {/* Left: Image mockup */}
+            <div
+              className="relative flex-shrink-0"
+              style={{ width: '472px', maxWidth: '100%' }}
+            >
+              <img
+                src={nextProject.mockup || nextProject.images[0]}
+                alt={nextProject.title}
+                className="w-full h-auto"
+                style={{ borderRadius: '18.27px' }}
+              />
+            </div>
+
+            {/* Right: Text content — Frame 256 */}
+            <div
+              className="flex flex-col"
+              style={{ maxWidth: '633px', gap: '40px', padding: '0 11px' }}
+            >
+              {/* Title + Description */}
+              <div className="flex flex-col" style={{ gap: '11px' }}>
+                <h2
+                  style={{
+                    fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                    fontWeight: 590,
+                    fontSize: '45px',
+                    lineHeight: '130%',
+                    textTransform: 'capitalize' as const,
+                    color: '#FFFFFF',
+                  }}
+                >
+                  {nextProject.caseStudy?.heroTitle || nextProject.title}
+                </h2>
+                <p
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 400,
+                    fontSize: '25px',
+                    lineHeight: '150%',
+                    color: '#565555', // Updated from CSS
+                  }}
+                >
+                  {nextProject.caseStudy?.heroSubtitle || nextProject.description}
                 </p>
               </div>
+
+              {/* Tags */}
+              {nextProject.tags && nextProject.tags.length > 0 && (
+                <div className="flex flex-wrap" style={{ gap: '9px' }}>
+                  {nextProject.tags.map((tag, i) => (
+                    <span
+                      key={i}
+                      className="inline-flex items-center capitalize"
+                      style={{
+                        padding: '0 12px',
+                        height: '23px',
+                        background: '#FFFFFF',
+                        borderRadius: '11px',
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 400,
+                        fontSize: '14px',
+                        lineHeight: '162.5%',
+                        color: '#000000',
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* CTA Button */}
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => {
+                  if (nextProjectRef.current) {
+                    nextProjectRef.current.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: '12px 19px',
+                  gap: '7px',
+                  width: '167px',
+                  height: '38px',
+                  background: 'rgba(255, 255, 255, 0.2)', // Transparent/Glassmorphic
+                  backgroundBlendMode: 'overlay',
+                  boxShadow: '0px 0px 1.76px rgba(0,0,0,0.05), 0px 0.88px 7.05px rgba(0,0,0,0.05), inset 0px 0px 0px 0.5px rgba(255,255,255,0.4)', // Softer shadows
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '88px',
+                  border: '1px solid rgba(255, 255, 255, 0.3)', // Added border for visibility
+                  cursor: 'pointer',
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 600,
+                  fontSize: '13px',
+                  lineHeight: '18px',
+                  letterSpacing: '-0.09px',
+                  textTransform: 'uppercase' as const,
+                  color: '#FFFFFF',
+                }}
+              >
+                {nextProject.cta || 'SEE CASE STUDY'}
+              </motion.button>
             </div>
           </div>
         </section>
 
-        {/* Transition text */}
-        <div
-          className="bg-gray-900 text-white py-8 text-center cursor-pointer"
-          onClick={() => {
-            if (nextProjectRef.current) {
-              nextProjectRef.current.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
-        >
-          <p className="text-sm text-gray-400 italic">
-            Keep scrolling or click to go to my next project
-          </p>
-        </div>
-
-        {/* Next project preview */}
+        {/* Hidden next project trigger for scroll transition */}
         <div
           ref={nextProjectRef}
           className="min-h-screen relative"
           style={{ backgroundColor: nextProject.backgroundColor }}
         >
-          {/* Next project hero */}
+          {/* Next project hero preview for transition */}
           <div className="max-w-6xl mx-auto px-6 pt-24 pb-12">
             <div className="text-center max-w-4xl mx-auto">
               <motion.h1
@@ -950,8 +1807,8 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onBack, onProjec
             </motion.div>
           </div>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

@@ -181,7 +181,7 @@ const Portfolio: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: direction === 'down' ? -50 : 50 }}
                 transition={transition}
-                className="absolute inset-0 w-full h-full flex items-center"
+                className="absolute inset-0 w-full h-full"
               >
                 <TestimonialsSection />
               </motion.div>
@@ -193,60 +193,133 @@ const Portfolio: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: direction === 'down' ? -30 : 30 }}
                 transition={transition}
-                className="absolute inset-0 w-full h-full flex items-center"
+                className="absolute inset-0 w-full h-full flex flex-col"
               >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 lg:gap-20 items-center w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-10">
-                  {/* Mobile Image - shown only on small screens */}
-                  <div className="lg:hidden w-full flex justify-center mb-4">
-                    {currentProject.images?.[0] && (
-                      <img
-                        src={currentProject.images[0]}
-                        alt={currentProject.title}
-                        className="w-full max-w-[280px] sm:max-w-[360px] h-auto rounded-xl"
-                      />
-                    )}
-                  </div>
+                {/* Featured Projects Header — mismo estilo que proyecto 1 (texto blanco) */}
+                <div className="w-full text-center pt-6 pb-2">
+                  <h2
+                    className="capitalize"
+                    style={{
+                      fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                      fontWeight: 590,
+                      fontSize: '25px',
+                      lineHeight: '150%',
+                      color: '#FFFFFF',
+                    }}
+                  >
+                    Featured Projects
+                  </h2>
+                </div>
 
-                  <div className="flex flex-col justify-center h-full text-center lg:text-left">
-                    <div className="flex flex-col space-y-4 sm:space-y-6 lg:space-y-8">
-                      <h1
-                        className="font-sans font-bold text-2xl sm:text-4xl md:text-5xl lg:text-7xl leading-[1.05] tracking-tight max-w-[18ch] mx-auto lg:mx-0"
-                        style={{ color: currentProject.textColor }}
-                      >
-                        {currentProject.title}
-                      </h1>
-                      <p
-                        className="text-sm sm:text-base lg:text-lg opacity-80 max-w-md font-medium mx-auto lg:mx-0"
-                        style={{ color: currentProject.textColor }}
-                      >
-                        {currentProject.description}
-                      </p>
+                <div className="flex-1 flex items-center">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 lg:gap-12 items-center w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+                    {/* Mobile Image - shown only on small screens */}
+                    <div className="lg:hidden w-full flex justify-center mb-4">
+                      {currentProject.images?.[0] && (
+                        <img
+                          src={currentProject.images[0]}
+                          alt={currentProject.title}
+                          className="w-full max-w-[280px] sm:max-w-[360px] h-auto rounded-3xl"
+                        />
+                      )}
+                    </div>
 
-                      <div className="flex flex-wrap gap-2 py-2 justify-center lg:justify-start">
-                        {currentProject.tags?.map((tag, i) => (
-                          <span
-                            key={i}
-                            className="px-3 sm:px-5 py-1.5 sm:py-2 rounded-full text-[0.6rem] sm:text-[0.7rem] font-semibold tracking-[0.08em] sm:tracking-[0.1em] bg-white text-gray-800 uppercase"
+                    <div className="flex flex-col justify-center h-full text-center lg:text-left" style={{ padding: '0 12px' }}>
+                      <div className="flex flex-col" style={{ gap: '32px' }}>
+                        {/* Title + Description — mismo estilo que proyecto 1 (texto blanco) */}
+                        <div className="flex flex-col" style={{ gap: '12px' }}>
+                          <h1
+                            className="capitalize max-w-[477px] mx-auto lg:mx-0"
+                            style={{
+                              fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                              fontWeight: 590,
+                              fontSize: 'clamp(28px, 4vw, 45px)',
+                              lineHeight: '130%',
+                              color: '#FFFFFF',
+                            }}
                           >
-                            {tag}
-                          </span>
-                        ))}
+                            {currentProject.title}
+                          </h1>
+                          <p
+                            className="max-w-[477px] mx-auto lg:mx-0"
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontWeight: 400,
+                              fontSize: 'clamp(16px, 2vw, 25px)',
+                              lineHeight: '150%',
+                              color: '#FFFFFF',
+                            }}
+                          >
+                            {currentProject.description}
+                          </p>
+                        </div>
+
+                        {/* Tags — mismo estilo que proyecto 1 (fondo gris oscuro, texto blanco) */}
+                        <div className="flex flex-wrap gap-[10px] justify-center lg:justify-start">
+                          {currentProject.tags?.map((tag, i) => (
+                            <span
+                              key={i}
+                              className="capitalize"
+                              style={{
+                                padding: '0 12px',
+                                height: '26px',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                borderRadius: '12px',
+                                background: '#313131',
+                                border: '1px solid rgba(255,255,255,0.2)',
+                                fontFamily: "'Inter', sans-serif",
+                                fontWeight: 400,
+                                fontSize: '16px',
+                                lineHeight: '162.5%',
+                                color: '#FFFFFF',
+                              }}
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
                       </div>
 
+                      {/* Glossy CTA Button - fondo transparente con efecto cristalino */}
                       <motion.button
-                        whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.25)' }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
                         onClick={() => navigate(`/project/${currentProject.id}`)}
-                        className="px-6 sm:px-8 py-3 sm:py-4 rounded-full text-[0.65rem] sm:text-[0.75rem] font-bold tracking-[0.12em] sm:tracking-[0.15em] uppercase bg-white/15 backdrop-blur-sm border border-white/20 w-fit mx-auto lg:mx-0 transition-all"
-                        style={{ color: currentProject.textColor }}
+                        className="w-fit mx-auto lg:mx-0"
+                        style={{
+                          marginTop: '45px',
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          padding: '14px 21px',
+                          gap: '8px',
+                          width: '189px',
+                          height: '43px',
+                          background: 'rgba(255, 255, 255, 0.12)',
+                          backdropFilter: 'blur(12px)',
+                          WebkitBackdropFilter: 'blur(12px)',
+                          boxShadow: '0px 1px 4px rgba(0,0,0,0.08), inset 0px 1px 0px rgba(255,255,255,0.2)',
+                          borderRadius: '100px',
+                          border: '1px solid rgba(255, 255, 255, 0.25)',
+                          cursor: 'pointer',
+                          fontFamily: "'Inter', sans-serif",
+                          fontWeight: 600,
+                          fontSize: '15px',
+                          lineHeight: '20px',
+                          letterSpacing: '-0.1px',
+                          textTransform: 'uppercase' as const,
+                          color: '#FFFFFF',
+                        }}
                       >
                         {currentProject.cta}
                       </motion.button>
                     </div>
-                  </div>
 
-                  {/* Empty space for ImageStack positioning */}
-                  <div className="relative aspect-[4/3] w-full hidden lg:block" />
+                    {/* Empty space for ImageStack positioning */}
+                    <div className="relative aspect-[4/3] w-full hidden lg:block" />
+                  </div>
                 </div>
               </motion.div>
             )}

@@ -1,13 +1,50 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+/* ═══════════════════════════════════════════════════════════════════════════
+ * CONFIGURACIÓN DE POSICIONAMIENTO - Modifica estos valores para mover los elementos
+ * Usa % para porcentaje, px para píxeles, vw/vh para viewport
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+const HERO_LAYOUT = {
+  /** Nombre "Lyna" — posición independiente (DESKTOP) */
+  nameLyna: { left: '10%', top: '45%' },
+
+  /** Nombre "Seridji" — posición independiente (DESKTOP) */
+  nameSeridji: { left: '60%', top: '45%' },
+
+  /** Párrafo "I solve complex product problem..." (DESKTOP) */
+  paragraph: { left: '10%', bottom: '30%', maxWidth: '376px' },
+
+  /** Párrafo (MOBILE/TABLET) */
+  paragraphMobile: { right: '1vw', top: '24%', maxWidth: '38vw' },
+
+  /** Píldora "3+ years of experience" */
+  pillExperience: { right: '10%', top: '55%' },
+
+  /** Píldora "B2B|B2C|Saas" */
+  pillB2B: { right: '24%', top: '65%' },
+
+  /** Píldora "Based in Medellin" */
+  pillMedellin: { right: '11%', top: '75%' },
+
+  /** Contenedor de píldoras en móvil (vertical/horizontal) */
+  pillsMobile: {
+    right: '4vw',
+    bottom: '12%',
+    /** 'col' = columna vertical, 'row' = fila horizontal */
+    direction: 'col' as 'col' | 'row',
+    gap: '0.8vw',
+  },
+};
+
 const Hero: React.FC = () => {
   return (
     <div className="relative w-full h-full text-black overflow-hidden flex items-center justify-center" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* Main Content Container */}
       <div className="relative w-full h-full flex items-center justify-center">
 
-        {/* MOBILE/TABLET: Name on left side */}
+        {/* MOBILE/TABLET: Name on left side — Lyna y Seridji separados */}
         <div className="absolute left-[5vw] top-[15%] z-20 lg:hidden">
           <h1
             className="leading-[0.95] tracking-[-0.03em] text-[#313131]"
@@ -23,30 +60,49 @@ const Hero: React.FC = () => {
           </h1>
         </div>
 
-        {/* MOBILE/TABLET: Description on right side, mid-height */}
-        <motion.div
-          className="absolute right-[1vw] top-[24%] z-20 lg:hidden max-w-[38vw]"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
+        {/* MOBILE/TABLET: Description */}
+        <div
+          className="absolute z-20 lg:hidden"
+          style={{
+            right: HERO_LAYOUT.paragraphMobile.right,
+            top: HERO_LAYOUT.paragraphMobile.top,
+            maxWidth: HERO_LAYOUT.paragraphMobile.maxWidth,
+          }}
         >
           <p className="font-normal leading-[1.2] text-[#313131]" style={{ fontSize: '2.6vw' }}>
             I solve complex product problem by aligning business goals, user needs, and scalable systems.
           </p>
-        </motion.div>
+        </div>
 
-        {/* DESKTOP: Name centered behind photo — SF Pro 180px semibold */}
+        {/* DESKTOP: Lyna y Seridji por separado para posicionar libremente */}
         <div className="absolute inset-0 hidden lg:flex items-center justify-center z-0 select-none pointer-events-none" style={{ marginTop: '-5%' }}>
           <h1
-            className="text-[#313131] whitespace-nowrap"
+            className="absolute text-[#313131]"
             style={{
               fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
               fontWeight: 590,
               fontSize: 'clamp(100px, 14vw, 180px)',
               lineHeight: '215px',
+              left: HERO_LAYOUT.nameLyna.left,
+              top: HERO_LAYOUT.nameLyna.top,
+              transform: 'translateY(-50%)',
             }}
           >
-            Lyna Seridji
+            Lyna
+          </h1>
+          <h1
+            className="absolute text-[#313131]"
+            style={{
+              fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+              fontWeight: 590,
+              fontSize: 'clamp(100px, 14vw, 180px)',
+              lineHeight: '215px',
+              left: HERO_LAYOUT.nameSeridji.left,
+              top: HERO_LAYOUT.nameSeridji.top,
+              transform: 'translateY(-50%)',
+            }}
+          >
+            Seridji
           </h1>
         </div>
 
@@ -65,46 +121,50 @@ const Hero: React.FC = () => {
           />
         </motion.div>
 
-        {/* MOBILE/TABLET: Pills on right side, vertical column */}
-        <div className="absolute right-[4vw] bottom-[12%] z-20 lg:hidden">
-          <div className="flex flex-col gap-[0.8vw] items-end">
-            <motion.span
+        {/* MOBILE/TABLET: Pills — dirección configurable (vertical u horizontal) */}
+        <div
+          className="absolute z-20 lg:hidden"
+          style={{
+            right: HERO_LAYOUT.pillsMobile.right,
+            bottom: HERO_LAYOUT.pillsMobile.bottom,
+          }}
+        >
+          <div
+            className="flex gap-[0.8vw] items-end"
+            style={{
+              flexDirection: HERO_LAYOUT.pillsMobile.direction === 'col' ? 'column' : 'row',
+              gap: HERO_LAYOUT.pillsMobile.gap,
+            }}
+          >
+            <span
               className="bg-[#313131] text-white rounded-full font-normal tracking-wide whitespace-nowrap"
               style={{ padding: '6px 16px', fontSize: '2vw' }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7, duration: 0.5 }}
             >
-              3+years of experience
-            </motion.span>
-            <motion.span
+              3+ years of experience
+            </span>
+            <span
               className="bg-[#313131] text-white rounded-full font-normal tracking-wide whitespace-nowrap"
               style={{ padding: '6px 16px', fontSize: '2vw' }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8, duration: 0.5 }}
             >
               Based in Medellin
-            </motion.span>
-            <motion.span
+            </span>
+            <span
               className="bg-[#313131] text-white rounded-full font-normal tracking-wide whitespace-nowrap"
               style={{ padding: '6px 16px', fontSize: '2vw' }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.9, duration: 0.5 }}
             >
-              B2B|B2C|Saas
-            </motion.span>
+              B2B | B2C | Saas
+            </span>
           </div>
         </div>
 
-        {/* DESKTOP: Description on left — Inter 24px */}
-        <motion.div
+        {/* DESKTOP: Párrafo */}
+        <div
           className="absolute z-20 pointer-events-auto hidden lg:block"
-          style={{ left: '48px', bottom: '30%', maxWidth: '376px' }}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
+          style={{
+            left: HERO_LAYOUT.paragraph.left,
+            bottom: HERO_LAYOUT.paragraph.bottom,
+            maxWidth: HERO_LAYOUT.paragraph.maxWidth,
+          }}
         >
           <p
             className="font-normal text-[#313131]"
@@ -112,64 +172,52 @@ const Hero: React.FC = () => {
           >
             I solve complex product problem by aligning business goals, user needs, and scalable systems.
           </p>
-        </motion.div>
+        </div>
 
-        {/* DESKTOP: Pills absolute positioned on right — staggered like Figma */}
+        {/* DESKTOP: Píldoras — cada una con posición editable */}
         <div className="hidden lg:block">
-          {/* 3+ years — top right */}
-          <motion.span
+          <span
             className="absolute bg-[#313131] text-white rounded-full font-normal tracking-wide z-20"
             style={{
-              right: '18%',
-              top: '48%',
+              right: HERO_LAYOUT.pillExperience.right,
+              top: HERO_LAYOUT.pillExperience.top,
               padding: '5px 16px',
               fontSize: '18px',
               lineHeight: '22px',
               fontFamily: "'Inter', sans-serif",
             }}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.5 }}
           >
-            3+years of experience
-          </motion.span>
+            3+ years of experience
+          </span>
 
-          {/* B2B|B2C|Saas — middle right, slightly left */}
-          <motion.span
+          <span
             className="absolute bg-[#313131] text-white rounded-full font-normal tracking-wide z-20"
             style={{
-              right: '24%',
-              top: '56%',
+              right: HERO_LAYOUT.pillB2B.right,
+              top: HERO_LAYOUT.pillB2B.top,
               padding: '5px 15px',
               fontSize: '18px',
               lineHeight: '22px',
               fontFamily: "'Inter', sans-serif",
               transform: 'rotate(-0.4deg)',
             }}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.5 }}
           >
-            B2B|B2C|Saas
-          </motion.span>
+            B2B | B2C | Saas
+          </span>
 
-          {/* Based in Medellin — bottom right */}
-          <motion.span
+          <span
             className="absolute bg-[#313131] text-white rounded-full font-normal tracking-wide z-20"
             style={{
-              right: '14%',
-              top: '64%',
+              right: HERO_LAYOUT.pillMedellin.right,
+              top: HERO_LAYOUT.pillMedellin.top,
               padding: '5px 21px',
               fontSize: '18px',
               lineHeight: '22px',
               fontFamily: "'Inter', sans-serif",
             }}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.5 }}
           >
             Based in Medellin
-          </motion.span>
+          </span>
         </div>
       </div>
     </div>

@@ -16,10 +16,11 @@ export interface KeyFinding {
 
 export interface DesignVersion {
   title: string;
-  status: 'winner' | 'discarded';
+  status?: 'winner' | 'discarded';
   image?: string;
-  pros: string[];
-  cons: string[];
+  video?: string;
+  pros?: string[];
+  cons?: string[];
 }
 
 export interface Feature {
@@ -74,6 +75,7 @@ export interface ProjectCaseStudy {
     title: string;
     description: string;
     personas: Persona[];
+    personaImage?: string;
     cardAccentColor?: string;
   };
   keyFindings?: {
@@ -99,6 +101,7 @@ export interface ProjectCaseStudy {
     title: string;
     description: string;
     features: Feature[];
+    demoVideo?: string;
   };
   outcome?: {
     title: string;

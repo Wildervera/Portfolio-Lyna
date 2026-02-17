@@ -29,17 +29,28 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
 
   const navLinks = [
     { to: '/', label: 'Home', isActive: isHome },
-    { to: '/projects', label: 'Projects', isActive: isProjects },
+    { to: '/projects', label: 'Work', isActive: isProjects },
     { to: '/about', label: 'About', isActive: isAbout },
   ];
 
   return (
     <>
-      <header className="fixed top-6 left-0 right-0 z-[150] flex justify-center items-center px-4 md:px-6">
+      <header className="fixed top-0 left-0 right-0 z-[150] flex justify-center items-center px-4 md:px-6" style={{ paddingTop: '38px' }}>
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="flex items-center justify-between w-full max-w-3xl px-4 md:px-8 py-3 md:py-4 rounded-full bg-[#f5f5f5] border border-gray-200/40"
+          className="flex items-center justify-between"
+          style={{
+            width: '100%',
+            maxWidth: '716px',
+            height: '73px',
+            padding: '0 32px',
+            borderRadius: '45px',
+            background: '#FFFFFF',
+            border: '1px solid rgba(217, 217, 217, 0.3)',
+            boxSizing: 'border-box',
+            fontFamily: "'Inter', sans-serif",
+          }}
         >
           {/* Mobile Menu Button */}
           <button
@@ -50,45 +61,73 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8 md:gap-10">
+          {/* Desktop Navigation — Left side */}
+          <nav className="hidden md:flex items-center" style={{ gap: '45px' }}>
             {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                className={`text-sm md:text-base font-normal transition-colors ${link.isActive ? 'text-gray-900' : 'text-gray-600 hover:text-gray-900'
-                  }`}
+                className="transition-colors"
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 400,
+                  fontSize: '18px',
+                  lineHeight: '22px',
+                  color: link.isActive ? '#000000' : '#666666',
+                }}
               >
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          {/* Right Actions */}
-          <div className="flex items-center gap-4 md:gap-8">
-            {/* Resume - hidden on small mobile */}
+          {/* Right Actions — Resume + Copy Email */}
+          <div className="flex items-center" style={{ gap: '21px' }}>
+            {/* Resume link */}
             <a
               href="https://drive.google.com/file/d/1Gq4jZ_mWaHWpPZ_JfYf7ijTT6PSGXF5y/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:block text-sm md:text-base font-normal text-gray-600 hover:text-gray-900 transition-colors"
+              className="hidden sm:block transition-colors hover:opacity-70"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 400,
+                fontSize: '18px',
+                lineHeight: '22px',
+                color: '#000000',
+              }}
             >
               Resume
             </a>
 
-            {/* Copy Email Button - simplified on mobile */}
+            {/* Copy Email Button — dark pill with icon */}
             <motion.button
               onClick={handleCopyEmail}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-2 px-3 md:px-5 py-2 md:py-2.5 rounded-full bg-[#313131] text-white text-sm md:text-base font-normal transition-all hover:bg-[#313131]/90"
+              className="flex items-center transition-all hover:opacity-90"
+              style={{
+                padding: '6px 13px',
+                gap: '5px',
+                height: '34px',
+                background: '#313131',
+                borderRadius: '24px',
+                border: 'none',
+                cursor: 'pointer',
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 400,
+                fontSize: '18px',
+                lineHeight: '22px',
+                color: '#FFFFFF',
+              }}
             >
               <svg
-                className="w-4 h-4"
+                width="20"
+                height="20"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                strokeWidth="2"
+                strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
@@ -148,7 +187,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ delay: 0.1 }}
-              className="absolute top-24 left-4 right-4 bg-white rounded-2xl shadow-xl border border-gray-100 p-6"
+              className="absolute top-28 left-4 right-4 bg-white rounded-2xl shadow-xl border border-gray-100 p-6"
             >
               <div className="flex flex-col gap-4">
                 {navLinks.map((link) => (
@@ -173,7 +212,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
                   onClick={() => setMobileMenuOpen(false)}
                   className="text-lg font-medium py-2 px-4 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors"
                 >
-                  Resume ↗
+                  Resume
                 </a>
               </div>
             </motion.nav>

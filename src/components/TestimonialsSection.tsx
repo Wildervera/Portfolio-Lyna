@@ -39,26 +39,65 @@ const TestimonialsSection: React.FC = () => {
   ];
 
   return (
-    <section className="w-full py-8 sm:py-10 md:py-16 px-4 sm:px-6 md:px-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Section Title */}
-        <h2 className="text-base sm:text-lg md:text-xl font-bold text-center text-black mb-6 sm:mb-8 md:mb-12">
+    <section
+      className="w-full flex flex-col justify-center items-center px-4 sm:px-6 md:px-8"
+      style={{ height: '100vh', maxHeight: '100vh', overflow: 'hidden', paddingTop: '80px', boxSizing: 'border-box' }}
+    >
+      <div className="mx-auto w-full" style={{ maxWidth: '1176px' }}>
+        {/* Section Title — SF Pro 25px semibold */}
+        <h2
+          className="text-center capitalize"
+          style={{
+            fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+            fontWeight: 590,
+            fontSize: '25px',
+            lineHeight: '150%',
+            color: '#313131',
+            marginBottom: '24px',
+          }}
+        >
           What It's Like To Work With Me
         </h2>
 
-        {/* Testimonials Grid - 1 col mobile, 2 cols tablet, 3 cols desktop */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
-          {/* First 3 cards */}
-          {testimonials.slice(0, 3).map((t, i) => (
+        {/* Grid: 1/2/4 columns responsive */}
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+          style={{ gap: '12px' }}
+        >
+          {testimonials.map((t, i) => (
             <div
               key={i}
-              className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-100 flex flex-col"
+              className="flex flex-col"
+              style={{
+                background: '#FFFFFF',
+                border: '0.8px solid rgba(0, 0, 0, 0.08)',
+                borderRadius: '19px',
+                padding: '24px 20px 20px',
+                boxSizing: 'border-box',
+              }}
             >
-              <p className="text-gray-600 text-xs sm:text-xs md:text-sm leading-relaxed mb-4 sm:mb-6 flex-grow line-clamp-6 sm:line-clamp-none">
+              {/* Quote text — Inter light */}
+              <p
+                className="flex-grow"
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 300,
+                  fontSize: '16px',
+                  lineHeight: '150%',
+                  color: '#000000',
+                  marginBottom: '16px',
+                }}
+              >
                 "{t.text}"
               </p>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full overflow-hidden mb-2">
+
+              {/* Author info — centered at bottom */}
+              <div className="flex flex-col items-center text-center" style={{ gap: '24px' }}>
+                {/* Avatar */}
+                <div
+                  className="rounded-full overflow-hidden"
+                  style={{ width: '92px', height: '92px', background: '#D9D9D9', flexShrink: 0 }}
+                >
                   <img
                     src={t.avatar}
                     alt={t.author}
@@ -66,30 +105,37 @@ const TestimonialsSection: React.FC = () => {
                     style={t.avatarStyle}
                   />
                 </div>
-                <h4 className="font-semibold text-xs md:text-sm text-black">{t.author}</h4>
-                <p className="text-[10px] md:text-xs text-gray-400">{t.role}</p>
+
+                {/* Name + Role */}
+                <div className="flex flex-col items-center" style={{ gap: '3px' }}>
+                  <h4
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 700,
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: '#000000',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {t.author}
+                  </h4>
+                  <p
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 400,
+                      fontSize: '14px',
+                      lineHeight: '150%',
+                      color: '#000000',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {t.role}
+                  </p>
+                </div>
               </div>
             </div>
           ))}
-
-          {/* Fourth card - spans full width on tablet, single col on mobile and desktop */}
-          <div className="bg-white rounded-xl p-4 sm:p-5 md:p-6 shadow-sm border border-gray-100 flex flex-col sm:col-span-2 lg:col-span-1">
-            <p className="text-gray-600 text-xs sm:text-xs md:text-sm leading-relaxed mb-4 sm:mb-6 flex-grow">
-              "{testimonials[3].text}"
-            </p>
-            <div className="flex flex-col items-center text-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full overflow-hidden mb-2">
-                <img
-                  src={testimonials[3].avatar}
-                  alt={testimonials[3].author}
-                  className="w-full h-full object-cover"
-                  style={testimonials[3].avatarStyle}
-                />
-              </div>
-              <h4 className="font-semibold text-xs md:text-sm text-black">{testimonials[3].author}</h4>
-              <p className="text-[10px] md:text-xs text-gray-400">{testimonials[3].role}</p>
-            </div>
-          </div>
         </div>
       </div>
     </section>
