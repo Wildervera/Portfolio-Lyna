@@ -15,7 +15,7 @@ const HERO_LAYOUT = {
   nameSeridji: { left: '60%', top: '45%' },
 
   /** Párrafo "I solve complex product problem..." (DESKTOP) */
-  paragraph: { left: '10%', bottom: '10%', maxWidth: '220px' },
+  paragraph: { left: '10%', bottom: '10%', maxWidth: '280px' },
 
   /** Párrafo (MOBILE/TABLET) */
   paragraphMobile: { right: '4vw', top: '24%', maxWidth: '31vw' },
