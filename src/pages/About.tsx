@@ -50,7 +50,7 @@ export const About: React.FC = () => {
 
   const handleCopyEmail = async () => {
     try {
-      await navigator.clipboard.writeText('lyna@example.com');
+      await navigator.clipboard.writeText('lyna.seridji@gmail.com');
       setCopiedEmail(true);
       setTimeout(() => setCopiedEmail(false), 2000);
     } catch (err) {
