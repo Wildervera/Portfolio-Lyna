@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
 
                 {/* Resume Link */}
                 <motion.a
-                    href="https://drive.google.com/file/d/1Gq4jZ_mWaHWpPZ_JfYf7ijTT6PSGXF5y/view?usp=sharing"
+                    href="https://drive.google.com/file/d/1x-eHJhxqN30-BeOglUkfrMp2jQyNFhF2/view?usp=drive_link"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-end no-underline"

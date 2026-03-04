@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
 
             {/* Resume link — hidden on mobile */}
             <a
-              href="https://drive.google.com/file/d/1Gq4jZ_mWaHWpPZ_JfYf7ijTT6PSGXF5y/view?usp=sharing"
+              href="https://drive.google.com/file/d/1x-eHJhxqN30-BeOglUkfrMp2jQyNFhF2/view?usp=drive_link"
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:block transition-colors hover:opacity-70"
@@ -224,7 +224,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
 
                 {/* Resume link in mobile menu */}
                 <a
-                  href="https://drive.google.com/file/d/1Gq4jZ_mWaHWpPZ_JfYf7ijTT6PSGXF5y/view?usp=sharing"
+                  href="https://drive.google.com/file/d/1x-eHJhxqN30-BeOglUkfrMp2jQyNFhF2/view?usp=drive_link"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setMobileMenuOpen(false)}
