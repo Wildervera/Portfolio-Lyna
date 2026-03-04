@@ -44,6 +44,10 @@ const values = [
 export const About: React.FC = () => {
   const [copiedEmail, setCopiedEmail] = useState(false);
 
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleCopyEmail = async () => {
     try {
       await navigator.clipboard.writeText('lyna@example.com');
