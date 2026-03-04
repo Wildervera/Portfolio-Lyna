@@ -111,7 +111,7 @@ export const About: React.FC = () => {
                 </div>
 
                 {/* Buttons */}
-                <div className="flex flex-wrap gap-4 pt-4">
+                <div className="flex flex-wrap gap-4 pt-4 justify-center lg:justify-start">
                   <motion.button
                     onClick={handleCopyEmail}
                     whileHover={{ scale: 1.02 }}

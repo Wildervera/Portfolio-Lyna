@@ -15,9 +15,9 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 1,
-    title: 'From Prototype To Scalable Product',
+    title: 'From Engineering Concept to Scalable Product',
     tags: ['SaaS Platform', 'Healthcare', 'B2B'],
-    description: 'Designing The "Phase 0" Foundation For A Series B Healthcare Startup To Reduce Cognitive Load And Error Rates.',
+    description: 'From 0 to 1: AI-Driven System Simplifying Insurance & Billing Workflows for DME/HME Providers',
     cta: 'SEE CASE STUDY',
     backgroundColor: '#3C416C',
     textColor: '#ffffff',
@@ -30,7 +30,7 @@ export const PROJECTS: Project[] = [
     fullContent: 'In this project, we focused on streamlining the clinician workflow by reducing the steps required for data entry by 40%. The design system utilized high-contrast typography and subtle elevation to distinguish between critical and non-critical patient data.',
     caseStudy: {
       heroTitle: 'From Engineering Concept to Scalable Product',
-      heroSubtitle: 'Designing the Phase 0 foundation for a Series B Healthcare startup to reduce cognitive load and error rates.',
+      heroSubtitle: 'From 0 to 1: AI-Driven System Simplifying Insurance & Billing Workflows for DME/HME Providers',
       heroImage: '/projets/thumbnail notable copy.webp',
       projectInfo: [
         { label: 'Timeline', value: '1.5 month' },
@@ -40,26 +40,51 @@ export const PROJECTS: Project[] = [
       ],
       team: {
         members: [
-          { name: 'Edwin Alonso' },
-          { name: 'Anis' },
+          {
+            name: 'Edwin Alonso',
+            avatar: '/projets/project 1/edwin alonso.jpeg'
+          },
+          {
+            name: 'Anis',
+            avatar: '/projets/project 1/anis.jpeg'
+          },
         ],
-        additionalCount: 5,
+        additionalCount: 4,
+        description: '4 Dev, 1 PM, 1 designer',
       },
       overview: {
+        context: {
+          icon: 'info',
+          title: 'Context',
+          description: 'This project focused on creating a system designed to help DME/HME providers manage the medical equipment they supply to patients at home. The system uses AI to reduce errors in insurance claims, billing, and payments by automating data entry and catching missing information early.'
+        },
         problem: {
           icon: 'x',
           title: 'Problem',
-          description: 'The engineer prototype from extreme cognitive overload. Friction in the UI increased data entry errors, which directly caused revenue loss for providers.'
+          description: 'The engineer prototype suffered from cognitive overload. Friction in the UI increased data entry errors, which directly caused revenue loss for DME/HME.'
         },
         goal: {
           icon: 'target',
           title: 'Goal',
-          description: 'Design a scalable Phase 0 platform that simplifies the workflow, builds trust in the AI backend, and drastically reduces claim processing time.'
+          description: 'The goal was to design a scalable platform that simplify complex workflows, reduce cognitive overload, and help teams process claims faster and more accurately.'
         },
         outcome: {
           icon: 'check',
-          title: 'Outcome',
-          description: 'The Phase 0 foundation successfully reduced onboarding time for new billing specialists and provided management with the real-time visibility they lacked.'
+          title: 'Impact',
+          metrics: [
+            {
+              trend: 'down',
+              text: '40% reduction in onboarding time for new billing specialists.',
+            },
+            {
+              trend: 'up',
+              text: '25% improvement in claim processing speed, thanks to fewer manual steps and early error detection.',
+            },
+            {
+              trend: 'up',
+              text: '100% real-time visibility into claim status and workflow bottlenecks.',
+            }
+          ]
         }
       },
       research: {
@@ -81,7 +106,7 @@ export const PROJECTS: Project[] = [
             description: 'Focuses on processing volume quickly and accuracy to ensure claims get paid.'
           },
           {
-            icon: '👶',
+            icon: '🤷‍♂️',
             title: 'New Staff Members',
             subtitle: 'RAPID ONBOARDING',
             description: 'Needs to ramp up quickly and learn how to use the product efficiently without constant help.'
@@ -90,14 +115,14 @@ export const PROJECTS: Project[] = [
       },
       keyFindings: {
         title: 'Interview Key Findings',
-        description: 'I conducted 12 user interviews with Operation Managers and Billing Specialists. The consensus was clear: the tool was getting in their way, not helping them.',
+        description: 'Through 12 interviews with Operation Managers and Billing Specialists, I learned that the tool often made their tasks harder instead of easier.',
         keyInsight: 'Users didn\'t trust the system because they couldn\'t see the status of their work. Visibility was the #1 missing feature.',
         findings: [
           {
             type: 'quote',
             content: 'I feel blind to what my team is doing.',
             label: 'PAIN POINT',
-            subtext: 'Managers rely on spreadsheets, causing delayed interventions.'
+            subtext: 'Managers use spreadsheets, which makes it hard to see what’s happening in real time and react quickly.'
           },
           {
             type: 'stat',
@@ -119,9 +144,17 @@ export const PROJECTS: Project[] = [
       },
       strategy: {
         sectionNumber: '02',
-        title: 'Structuring the Chaos',
+        title: 'User Flow & Wireframes',
         description: 'I organized the platform\'s structure into clear, purpose-driven zones. This hierarchy separates the "noise" of admin settings from the "signal" of day-to-day workflows.',
-        diagramImage: '/projets/project 1/MC.png'
+        diagramImage: '/projets/project 1/MC.png',
+        wireframes: [
+          '/projets/project 1/wireframes/Admin - Roles & Permissions.png',
+          '/projets/project 1/wireframes/Admin.png',
+          '/projets/project 1/wireframes/Authentification- login.png',
+          '/projets/project 1/wireframes/Authentification- verification.png',
+          '/projets/project 1/wireframes/Order extraction.png',
+          '/projets/project 1/wireframes/Order Intake.png'
+        ]
       },
       iteration: {
         sectionNumber: '03',
@@ -129,7 +162,7 @@ export const PROJECTS: Project[] = [
         description: 'While I designed the entire platform from scratch, I selected the document upload flow to highlight my iteration process. It\'s a clear example of how I explore different options, test assumptions, and refine the experience toward a final solution.',
         versions: [
           {
-            title: 'V1: Inline Upload Feedback Inside the Modal',
+            title: 'Version A: Upload Status Listed Inline',
             status: 'discarded',
             video: '/projets/project 1/T1.mov',
             pros: [
@@ -143,7 +176,7 @@ export const PROJECTS: Project[] = [
             ]
           },
           {
-            title: 'V2: Two structured Tabs: "Uploading" & "Failed"',
+            title: 'Version B: Two structured Tabs "Uploading" & "Failed"',
             status: 'winner',
             video: '/projets/project 1/T2.mov',
             pros: [
@@ -174,7 +207,7 @@ export const PROJECTS: Project[] = [
           { number: 9, title: 'Admin Settings Overview', description: 'A simple grid for Roles & Permissions and Work Distribution keeps configuration organized and easy to navigate.' },
           { number: 10, title: 'Roles & Permissions Matrix', description: 'Helps admins quickly understand differences between roles and adjust access with confidence.' }
         ],
-        demoVideo: '/projets/project 1/Final_product.mp4',
+        demoVideo: '/projets/project 1/final_demo.mov',
       },
       outcome: {
         title: 'The Outcome',
@@ -188,13 +221,13 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 2,
-    title: 'Rebuilding A Monday Plugin For Clarity, Speed, And Accuracy',
+    title: 'Rebuilding a Monday plugin for clarity, speed, and accuracy',
     tags: ['SaaS Product', 'Construction', 'B2B'],
     description: 'Designing a structured Monday.com plugin form that helps clients submit accurate project details and enables to generate quotes efficiently.',
     cta: 'SEE CASE STUDY',
     backgroundColor: '#B4CAD5', // Updated for Next Project card apperance
-    textColor: '#565555',
-    accentColor: '#565555',
+    textColor: '#FFFFFF',
+    accentColor: '#FFFFFF',
     type: 'project',
     images: [
       '/projets/Project2/mockup.png'
@@ -214,12 +247,20 @@ export const PROJECTS: Project[] = [
       ],
       team: {
         members: [
-          { name: 'Joseph Hernandez' },
-          { name: 'Anis' },
+          { name: 'Joseph Hernandez', avatar: '/testimonials/joseph hernandez.webp' },
+          { name: 'Anis', avatar: '/testimonials/anis.webp' },
         ],
-        additionalCount: 3,
+        additionalCount: 1,
+        description: '1 Dev, 1 PM, 1 designer',
+        backgroundColor: '#B4CAD5',
+        textColor: '#FFFFFF',
       },
       overview: {
+        context: {
+          icon: 'info',
+          title: 'Context',
+          description: 'Parkway is a construction company that manages all its operations through Monday.com. My role was to redesign their intake form, which functions as a plugin directly inside their Monday workspace and is used every day by the team to initiate, organize, and structure new projects more efficiently.'
+        },
         problem: {
           icon: 'x',
           title: 'Problem',
@@ -232,8 +273,21 @@ export const PROJECTS: Project[] = [
         },
         outcome: {
           icon: 'check',
-          title: 'Outcome',
-          description: 'The redesigned form reduced vertical fatigue and made the submission process more intuitive. 70% decrease in incomplete submissions, 40% fewer data-entry errors, and a notable reduction in the time needed to generate quotes.'
+          title: 'Impact',
+          metrics: [
+            {
+              trend: 'down',
+              text: '70% decrease in incomplete submissions.',
+            },
+            {
+              trend: 'down',
+              text: '40% fewer data-entry errors.',
+            },
+            {
+              trend: 'down',
+              text: 'Notable reduction in the time needed to generate quotes.',
+            }
+          ]
         }
       },
       research: {
@@ -241,7 +295,6 @@ export const PROJECTS: Project[] = [
         title: 'Who we build this for?',
         description: 'Interviews with internal teams and reviews of past submissions clarified who uses the form and what they need.',
         cardAccentColor: '#CAFA89', // Greenish accent from screenshots
-        personaImage: '/projets/Project2/persona.png',
         personas: [
           {
             icon: '🙋',
@@ -267,6 +320,7 @@ export const PROJECTS: Project[] = [
         title: 'Main Insight from research',
         description: 'Users lose track of their progress because the form presents all fields at once, causing overwhelm and incomplete submissions.',
         keyInsight: undefined,
+        backgroundImage: '/projets/Project2/main-insight-bg.jpg',
         findings: []
       },
       strategy: {
@@ -278,67 +332,58 @@ export const PROJECTS: Project[] = [
       iteration: {
         sectionNumber: '03',
         title: 'Wireframes',
-        description: 'We translated the new multi-step flow into low-fidelity wireframes to validate structure and clarity early on. These wireframes focused on the simplified steps, essential-first fields, and the added progress indicator, allowing us to quickly test the flow before moving into high-fidelity design. While I designed the entire platform from scratch, I selected the document upload flow to highlight my iteration process.',
-        versions: [
+        description: 'These wireframes focused on the simple steps, key fields, and the new progress indicator. This helped me test the flow quickly before building the high-fidelity designs.',
+        image: '/projets/Project2/Wireframe - 1.png',
+        versions: []
+      },
+      iterationAfterTesting: {
+        title: 'Improvement after testing',
+        description: "I used the main feedback from each testing round to improve the flow, adjust the layout, and make the steps clearer. These changes helped shape the final design and made the experience easier to use.",
+        images: [
+          '/projets/Project2/Component 4.png',
+          '/projets/Project2/Component 5.png',
+          '/projets/Project2/Component 6.png',
+          '/projets/Project2/Component 7.png',
+          '/projets/Project2/Component 8.png'
+        ],
+        descriptions: [
           {
-            title: 'Step 1: Project Type',
-            image: '/projets/Project2/Interface 1 - PROJECT TYPE.png',
-            status: undefined,
-            pros: [],
-            cons: []
+            before: 'The progress bar only showed a percentage, leaving users unsure of what steps were ahead or how far they were in the process.',
+            after: 'Replaced the percentage bar with a clear four-step indicator, giving users instant visibility into the process and what comes next.'
           },
           {
-            title: 'Step 2: General Info',
-            image: '/projets/Project2/Interface 2 - GENERAL INFO.png',
-            status: undefined,
-            pros: [],
-            cons: []
+            before: 'Multiple open text fields forced users to type everything manually, slowing them down and creating unnecessary friction.',
+            after: 'Replaced open text fields with simple dropdown menus, making choices faster, clearer, and easier to complete.'
           },
           {
-            title: 'Step 2b: Team Details',
-            image: '/projets/Project2/Interface 2 -TEAM.png',
-            status: undefined,
-            pros: [],
-            cons: []
+            before: 'The long list of text fields made the form feel confusing and slow to fill out.',
+            after: 'A clear step-by-step layout breaks the form into smaller parts, making it easier to understand and complete.'
           },
           {
-            title: 'Step 3: Scope & Specs',
-            image: '/projets/Project2/Interface 3 - SCOPE & SPECS.png',
-            status: undefined,
-            pros: [],
-            cons: []
+            before: 'The section felt a bit tight, which made the content slightly harder to scan at a glance.',
+            after: 'A bit more spacing and breathing room makes the layout easier to read and helps users move through the information more smoothly.'
           },
           {
-            title: 'Step 4: Finalize',
-            image: '/projets/Project2/Interface 4 - FINALIZE.png',
-            status: undefined,
-            pros: [],
-            cons: []
-          },
-          {
-            title: 'Step 5: Confirmation',
-            image: '/projets/Project2/Interface 5 - CONFIRMATION.png',
-            status: undefined,
-            pros: [],
-            cons: []
+            before: "The confirmation screen felt a bit static, and the progress bar at the top didn’t add much clarity now that the task was finished.",
+            after: "The cleaner layout removes the progress bar and puts full focus on the success message, making the confirmation screen feel simpler and more complete."
           }
         ]
       },
       solution: {
         sectionNumber: '04',
         title: 'The Final Design',
-        description: 'See the final result in the next section.',
+        description: 'After several rounds of research, testing, and iteration, the final design brings together all the improvements made during the process. The new flow is clearer, faster to complete, and easier for users to understand. The mockups below show the final interface and how the different steps work together to create a smoother experience',
         features: [],
-        demoVideo: '' // No video provided
+        demoVideo: '/projets/Project2/Screen Recording final product.mov'
       }
     },
   },
   {
     id: 3,
-    title: 'Designing a User-Centered Coaching App Experience',
+    title: 'Designing a user-centered coaching app experience',
     tags: ['Mobile App', 'Healthcare', 'B2B'],
     description: 'Creating a functional first iteration aimed at validating user needs and product viability.',
-    cta: 'SEE CASE STUDY',
+    cta: 'COMING SOON',
     backgroundColor: '#B5AEE2',
     textColor: '#ffffff',
     accentColor: '#ffffff',

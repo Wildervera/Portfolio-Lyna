@@ -10,6 +10,14 @@ export const GLOBAL_STYLES = `
     scrollbar-width: none;
     -ms-overflow-style: none;
     background: #FAF9F6;
+    cursor: none;
+  }
+
+  /* Hide default pointers across interactive elements on hover-supported devices */
+  @media (hover: hover) and (pointer: fine) {
+    * {
+      cursor: none !important;
+    }
   }
 
   body::-webkit-scrollbar {

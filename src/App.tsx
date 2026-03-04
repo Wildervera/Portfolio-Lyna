@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
 import { Routes, Route, useNavigate, useMatch } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, X } from 'lucide-react';
 
 import { PROJECTS } from './data/projects';
 import { GLOBAL_STYLES } from './styles/global';
@@ -13,6 +13,7 @@ import {
   ProjectDetail
 } from './components';
 import { About, Projects as ProjectsPage } from './pages';
+import { CustomCursor } from './components/CustomCursor';
 import { Project } from './types';
 
 // Helper component for intersection observation
@@ -24,7 +25,7 @@ const SectionObserver: React.FC<{
   id?: string;
 }> = ({ children, index, onInView, className, id }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { margin: "-30% 0px -30% 0px" });
+  const isInView = useInView(ref, { margin: "-45% 0px -45% 0px" });
 
   useEffect(() => {
     if (isInView) {
@@ -57,50 +58,78 @@ const ProjectSection: React.FC<{
   const opacity = useTransform(scrollYProgress, [0.2, 0.5, 0.8], [0, 1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1, 0.85]);
 
+  const isComingSoon = !project.caseStudy || project.cta?.toUpperCase() === 'COMING SOON';
+  const [showComingSoonPopup, setShowComingSoonPopup] = useState(false);
+
   return (
-    <div ref={ref} className="w-full h-full flex flex-col justify-center py-16 lg:py-0 min-h-[85vh]">
+    <div ref={ref} className="w-full h-full flex flex-col justify-center py-16 pt-24 lg:pt-32 lg:pb-16 min-h-[100vh]">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 lg:gap-12 items-center w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
         {/* Mobile Image */}
         <div className="lg:hidden w-full flex justify-center mb-4">
           {project.images?.[0] && (
-            <img
-              src={project.images[0]}
-              alt={project.title}
-              className="w-full max-w-[280px] sm:max-w-[360px] h-auto rounded-3xl shadow-lg"
-            />
+            <div className="w-full max-w-[280px] sm:max-w-[360px] aspect-[4/3] rounded-3xl shadow-lg overflow-hidden">
+              <img
+                src={project.images[0]}
+                alt={project.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
           )}
         </div>
 
         {/* Text Content */}
         <div className="flex flex-col justify-center h-full text-center lg:text-left" style={{ padding: '0 12px' }}>
-          <div className="flex flex-col" style={{ gap: '32px' }}>
+          <motion.div
+            className="flex flex-col"
+            style={{ gap: '32px' }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={{
+              visible: {
+                transition: {
+                  staggerChildren: 0.1,
+                  delayChildren: 0.2
+                }
+              }
+            }}
+          >
             <div className="flex flex-col" style={{ gap: '12px' }}>
               <motion.h1
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="capitalize max-w-[477px] mx-auto lg:mx-0"
+                variants={{
+                  hidden: { opacity: 0, x: -100 },
+                  visible: {
+                    opacity: 1,
+                    x: 0,
+                    transition: { duration: 0.8, ease: "easeOut" }
+                  }
+                }}
+                className="max-w-[600px] mx-auto lg:mx-0"
                 style={{
                   fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
-                  fontWeight: 590,
-                  fontSize: 'clamp(28px, 4vw, 45px)',
-                  lineHeight: '130%',
+                  fontWeight: 600,
+                  fontSize: 'clamp(20px, 5vw, 50px)',
+                  letterSpacing: '-0.5px',
+                  lineHeight: '100%',
                   color: project.textColor || '#FFFFFF',
                 }}
               >
                 {project.title}
               </motion.h1>
               <motion.p
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
+                variants={{
+                  hidden: { opacity: 0, x: -100 },
+                  visible: {
+                    opacity: 1,
+                    x: 0,
+                    transition: { duration: 0.8, ease: "easeOut" }
+                  }
+                }}
                 className="max-w-[477px] mx-auto lg:mx-0"
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   fontWeight: 400,
-                  fontSize: '25px',
+                  fontSize: '18px',
                   lineHeight: '150%',
                   color: project.textColor || '#FFFFFF',
                 }}
@@ -111,10 +140,14 @@ const ProjectSection: React.FC<{
 
             {/* Tags */}
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              variants={{
+                hidden: { opacity: 0, x: -100 },
+                visible: {
+                  opacity: 1,
+                  x: 0,
+                  transition: { duration: 0.8, ease: "easeOut" }
+                }
+              }}
               className="flex flex-wrap gap-[10px] justify-center lg:justify-start"
             >
               {project.tags?.map((tag, i) => (
@@ -140,46 +173,55 @@ const ProjectSection: React.FC<{
                 </span>
               ))}
             </motion.div>
-          </div>
 
-          {/* CTA Button */}
-          <motion.button
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate(`/project/${project.id}`)}
-            className="w-fit mx-auto lg:mx-0"
-            style={{
-              marginTop: '45px',
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: '14px 21px',
-              gap: '8px',
-              width: '189px',
-              height: '43px',
-              background: 'rgba(255, 255, 255, 0.12)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              boxShadow: '0px 1px 4px rgba(0,0,0,0.08), inset 0px 1px 0px rgba(255,255,255,0.2)',
-              borderRadius: '100px',
-              border: '1px solid rgba(255, 255, 255, 0.25)',
-              cursor: 'pointer',
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: 600,
-              fontSize: '15px',
-              lineHeight: '20px',
-              letterSpacing: '-0.1px',
-              textTransform: 'uppercase',
-              color: project.textColor || '#FFFFFF',
-            }}
-          >
-            {project.cta}
-          </motion.button>
+            {/* CTA Button */}
+            <motion.button
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+              whileHover={isComingSoon ? {} : { scale: 1.03 }}
+              whileTap={isComingSoon ? {} : { scale: 0.97 }}
+              onClick={() => {
+                if (isComingSoon) {
+                  setShowComingSoonPopup(true);
+                } else {
+                  navigate(`/project/${project.id}`);
+                }
+              }}
+              className="w-fit mx-auto lg:mx-0"
+              style={{
+                marginTop: '13px',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '14px 21px',
+                gap: '8px',
+                width: '189px',
+                height: '43px',
+                background: 'rgba(255, 255, 255, 0.12)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                boxShadow: '0px 1px 4px rgba(0,0,0,0.08), inset 0px 1px 0px rgba(255,255,255,0.2)',
+                borderRadius: '100px',
+                border: isComingSoon ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.25)',
+                cursor: 'pointer',
+                opacity: isComingSoon ? 0.6 : 1,
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 600,
+                fontSize: '15px',
+                lineHeight: '20px',
+                letterSpacing: '-0.1px',
+                textTransform: 'uppercase',
+                color: project.textColor || '#FFFFFF',
+              }}
+            >
+              {project.cta}
+            </motion.button>
+          </motion.div>
+
+
         </div>
 
         {/* Desktop Image */}
@@ -187,17 +229,21 @@ const ProjectSection: React.FC<{
           {project.images?.[0] && (
             <motion.div
               className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl cursor-pointer origin-center"
+              whileHover={isComingSoon ? {} : { scale: 1.05 }}
+              onClick={() => {
+                if (isComingSoon) {
+                  setShowComingSoonPopup(true);
+                } else {
+                  navigate(`/project/${project.id}`);
+                }
+              }}
               style={{
-                transformStyle: 'preserve-3d',
-                rotate,
-                rotateY: -12,
                 y,
                 x,
                 opacity,
                 scale,
+                cursor: 'pointer',
               }}
-              whileHover={{ scale: 1.05, rotate: 10, rotateY: -10 }}
-              onClick={() => navigate(`/project/${project.id}`)}
             >
               <motion.div
                 className="w-full h-full"
@@ -219,11 +265,70 @@ const ProjectSection: React.FC<{
           )}
         </div>
       </div>
+
+      {/* Coming Soon Popup overlay */}
+      <AnimatePresence>
+        {showComingSoonPopup && (
+          <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 bg-black/40 backdrop-blur-md"
+              onClick={() => setShowComingSoonPopup(false)}
+            />
+            {/* Popup Content */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="relative w-full max-w-sm bg-white rounded-[32px] p-10 flex flex-col items-center text-center shadow-2xl overflow-hidden"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setShowComingSoonPopup(false)}
+                className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-900 transition-colors bg-gray-100 hover:bg-gray-200 rounded-full"
+                aria-label="Close"
+              >
+                <X size={20} />
+              </button>
+
+              <h3
+                style={{
+                  fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
+                  fontWeight: 600,
+                  fontSize: '32px',
+                  lineHeight: '1.2',
+                  color: '#000000',
+                  marginTop: '12px',
+                  marginBottom: '16px',
+                }}
+              >
+                Coming soon
+              </h3>
+              <p
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontWeight: 400,
+                  fontSize: '17px',
+                  lineHeight: '150%',
+                  color: '#666666',
+                }}
+              >
+                I'm currently working on presenting this project into my portfolio.
+              </p>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
-const Portfolio: React.FC = () => {
+const Portfolio: React.FC<{ isWorkPage?: boolean }> = ({ isWorkPage = false }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
   const match = useMatch('/project/:id');
@@ -238,10 +343,12 @@ const Portfolio: React.FC = () => {
   };
 
   // Determine current background color based on index
-  const currentBg = PROJECTS[currentIndex]?.backgroundColor || PROJECTS[0].backgroundColor;
+  const displayProjects = isWorkPage ? PROJECTS.filter(p => p.type === 'project') : PROJECTS;
+  const currentBg = displayProjects[currentIndex]?.backgroundColor || displayProjects[0].backgroundColor;
 
   return (
     <div className="relative w-full min-h-screen">
+      <CustomCursor />
       <style>{GLOBAL_STYLES}</style>
 
       {/* Global Fixed Background */}
@@ -267,7 +374,7 @@ const Portfolio: React.FC = () => {
       />
 
       <main className="relative w-full flex flex-col">
-        {PROJECTS.map((project, index) => {
+        {displayProjects.map((project, index) => {
           // Render logic based on type
           if (project.type === 'hero') {
             return (
@@ -276,18 +383,20 @@ const Portfolio: React.FC = () => {
                 index={index}
                 onInView={setCurrentIndex}
                 id={`section-${index}`}
-                className="w-full h-screen pt-20 relative"
+                className="w-full h-screen relative"
               >
                 <Hero />
-                <motion.div
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute bottom-2 left-[45%] z-50 flex flex-col items-center gap-2 opacity-30 pointer-events-none"
-                  style={{ color: '#000000' }}
-                >
-                  <span className="text-[0.6rem] font-bold tracking-[0.3em] uppercase">Scroll to see more</span>
-                  <ChevronDown size={20} />
-                </motion.div>
+                <div className="absolute bottom-2 left-[35%] md:left-0 md:right-0 md:flex md:justify-center z-50 pointer-events-none">
+                  <motion.div
+                    animate={{ y: [0, 10, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="flex flex-col items-center gap-2 opacity-30"
+                    style={{ color: '#000000' }}
+                  >
+                    <span className="text-[0.6rem] font-bold tracking-[0.3em] uppercase">Scroll to see more</span>
+                    <ChevronDown size={20} />
+                  </motion.div>
+                </div>
               </SectionObserver>
             );
           }
@@ -313,17 +422,17 @@ const Portfolio: React.FC = () => {
               index={index}
               onInView={setCurrentIndex}
               id={`section-${index}`}
-              className="w-full min-h-[85vh] relative flex flex-col justify-center"
+              className="w-full min-h-[100vh] relative flex flex-col justify-center"
             >
-              {/* "Featured Projects" Header before the first project (index 1) */}
-              {index === 1 && (
-                <div className="absolute top-[10%] w-full text-center z-10 w-full">
+              {/* "Featured Projects" Header before the first project */}
+              {!isWorkPage && index === 1 && (
+                <div className="absolute top-[5%] w-full text-center z-10 w-full">
                   <h2
                     className="capitalize"
                     style={{
                       fontFamily: "'SF Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif",
                       fontWeight: 590,
-                      fontSize: '25px',
+                      fontSize: '16px',
                       lineHeight: '150%',
                       color: '#FFFFFF',
                     }}
@@ -339,16 +448,18 @@ const Portfolio: React.FC = () => {
         })}
       </main>
 
-      {/* NavDots */}
-      <div className="hidden md:block">
-        <NavDots
-          projects={PROJECTS}
-          currentIndex={currentIndex}
-          onNavigate={handleNavigate}
-          isHovered={false}
-          onHoverChange={() => { }}
-        />
-      </div>
+      {/* NavDots — hidden on Hero section */}
+      {displayProjects[currentIndex]?.type !== 'hero' && (
+        <div className="hidden md:block">
+          <NavDots
+            projects={displayProjects}
+            currentIndex={currentIndex}
+            onNavigate={handleNavigate}
+            isHovered={false}
+            onHoverChange={() => { }}
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -359,7 +470,7 @@ const App: React.FC = () => {
       <Route path="/" element={<Portfolio />} />
       <Route path="/project/:id" element={<Portfolio />} />
       <Route path="/about" element={<About />} />
-      <Route path="/projects" element={<ProjectsPage />} />
+      <Route path="/projects" element={<Portfolio isWorkPage={true} />} />
     </Routes>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ArrowUp } from 'lucide-react';
 
 interface HeaderProps {
   onNavigate?: (index: number) => void;
@@ -23,6 +23,10 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
     }
   };
 
+  const handleScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const isHome = location.pathname === '/' || location.pathname.startsWith('/project');
   const isProjects = location.pathname === '/projects';
   const isAbout = location.pathname === '/about';
@@ -39,12 +43,9 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="flex items-center justify-between"
+          className="flex items-center justify-between w-full max-w-[320px] md:max-w-[560px] lg:max-w-[716px] h-[46px] md:h-[58px] lg:h-[73px]"
           style={{
-            width: '100%',
-            maxWidth: '716px',
-            height: '73px',
-            padding: '0 32px',
+            padding: '0 clamp(16px, 3vw, 32px)',
             borderRadius: '45px',
             background: '#FFFFFF',
             border: '1px solid rgba(217, 217, 217, 0.3)',
@@ -52,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
             fontFamily: "'Inter', sans-serif",
           }}
         >
-          {/* Mobile Menu Button */}
+          {/* Mobile: left side — hamburger button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-1 text-gray-700 hover:text-gray-900 transition-colors"
@@ -71,7 +72,7 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   fontWeight: 400,
-                  fontSize: '18px',
+                  fontSize: 'clamp(14px, 1.6vw, 18px)',
                   lineHeight: '22px',
                   color: link.isActive ? '#000000' : '#666666',
                 }}
@@ -81,9 +82,28 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
             ))}
           </nav>
 
-          {/* Right Actions — Resume + Copy Email */}
-          <div className="flex items-center" style={{ gap: '21px' }}>
-            {/* Resume link */}
+          {/* Right Actions */}
+          <div className="flex items-center" style={{ gap: '12px' }}>
+            {/* Scroll-to-top — mobile only */}
+            <motion.button
+              onClick={handleScrollTop}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="sm:hidden flex items-center justify-center"
+              aria-label="Scroll to top"
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: '#313131',
+                padding: '4px',
+                flexShrink: 0,
+              }}
+            >
+              <ArrowUp size={24} strokeWidth={2.5} />
+            </motion.button>
+
+            {/* Resume link — hidden on mobile */}
             <a
               href="https://drive.google.com/file/d/1Gq4jZ_mWaHWpPZ_JfYf7ijTT6PSGXF5y/view?usp=sharing"
               target="_blank"
@@ -100,12 +120,12 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
               Resume
             </a>
 
-            {/* Copy Email Button — dark pill with icon */}
+            {/* Copy Email Button — hidden on mobile (sm:flex = shown from sm up) */}
             <motion.button
               onClick={handleCopyEmail}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex items-center transition-all hover:opacity-90"
+              className="hidden sm:flex items-center transition-all hover:opacity-90"
               style={{
                 padding: '6px 13px',
                 gap: '5px',
@@ -141,7 +161,6 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
-                    className="hidden sm:inline"
                   >
                     Copied!
                   </motion.span>
@@ -151,7 +170,6 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
-                    className="hidden sm:inline"
                   >
                     Copy email
                   </motion.span>
@@ -214,6 +232,27 @@ export const Header: React.FC<HeaderProps> = ({ onNavigate, currentIndex }) => {
                 >
                   Resume
                 </a>
+
+                {/* Copy email in mobile menu */}
+                <button
+                  onClick={() => { handleCopyEmail(); setMobileMenuOpen(false); }}
+                  className="text-left text-lg font-medium py-2 px-4 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors flex items-center gap-3"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                  {copied ? 'Copied!' : 'Copy email'}
+                </button>
               </div>
             </motion.nav>
           </motion.div>

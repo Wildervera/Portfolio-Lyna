@@ -47,6 +47,9 @@ export interface TeamMember {
 export interface ProjectTeam {
   members: TeamMember[];
   additionalCount?: number;
+  description?: string;
+  backgroundColor?: string;
+  textColor?: string;
 }
 
 export interface ContentSection {
@@ -65,10 +68,16 @@ export interface ProjectCaseStudy {
   projectInfo?: ProjectInfo[];
   team?: ProjectTeam;
   overview: {
+    context?: { icon: string; title: string; description: string };
     problem: { icon: string; title: string; description: string };
     goal: { icon: string; title: string; description: string };
     role?: { icon: string; title: string; description: string };
-    outcome?: { icon: string; title: string; description: string };
+    outcome?: {
+      icon: string;
+      title: string;
+      description?: string;
+      metrics?: { text: string; trend: 'up' | 'down' }[];
+    };
   };
   research?: {
     sectionNumber: string;
@@ -83,17 +92,20 @@ export interface ProjectCaseStudy {
     description: string;
     keyInsight?: string;
     findings: KeyFinding[];
+    backgroundImage?: string;
   };
   strategy?: {
     sectionNumber: string;
     title: string;
     description: string;
     diagramImage?: string;
+    wireframes?: string[];
   };
   iteration?: {
     sectionNumber: string;
     title?: string;
     description?: string;
+    image?: string;
     versions: DesignVersion[];
   };
   solution?: {
@@ -126,6 +138,12 @@ export interface ProjectCaseStudy {
   lessonLearned?: {
     title: string;
     description: string;
+  };
+  iterationAfterTesting?: {
+    title: string;
+    description: string;
+    images: string[];
+    descriptions?: { before?: string; after?: string }[];
   };
 }
 
