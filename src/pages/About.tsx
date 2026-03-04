@@ -138,7 +138,7 @@ export const About: React.FC = () => {
                   </motion.button>
 
                   <motion.a
-                    href="https://www.linkedin.com/in/lyna/"
+                    href="https://www.linkedin.com/in/lyna-seridji"
                     target="_blank"
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.02 }}
