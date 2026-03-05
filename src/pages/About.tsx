@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Header } from '../components';
-import { CustomCursor } from '../components/CustomCursor';
-import { GLOBAL_STYLES } from '../styles/global';
 
 // Experience data
 const experiences = [
   {
     title: "Product Designer",
     company: "Nexgen Soluciones",
-    period: "Nov 2025 - Present"
+    period: "Oct 2025 - Present"
   },
   {
     title: "UX/UI Designer",
@@ -62,8 +60,6 @@ export const About: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]">
-      <style>{GLOBAL_STYLES}</style>
-      <CustomCursor />
       <Header />
 
       {/* Hero Section */}
