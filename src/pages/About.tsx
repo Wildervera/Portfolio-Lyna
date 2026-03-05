@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Header } from '../components';
+import { CustomCursor } from '../components/CustomCursor';
+import { GLOBAL_STYLES } from '../styles/global';
 
 // Experience data
 const experiences = [
@@ -59,7 +61,9 @@ export const About: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6]">
+    <div className="min-h-screen bg-[#FAF9F6] relative">
+      <CustomCursor />
+      <style>{GLOBAL_STYLES}</style>
       <Header />
 
       {/* Hero Section */}
