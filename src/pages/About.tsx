@@ -109,8 +109,7 @@ export const About: React.FC = () => {
                     As someone naturally curious, I enjoy digging into user behavior, asking
                     questions, and exploring new ideas. I love learning, whether it's
                     improving my product thinking, deepening my knowledge in design, or
-                    exploring new areas like vibecoding and AI. Continuous learning keeps
-                    me excited about the future of product design.
+                    exploring new areas like vibecoding and AI.
                   </p>
                 </div>
 
