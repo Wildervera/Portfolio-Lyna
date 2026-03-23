@@ -6,51 +6,80 @@ const Footer: React.FC = () => {
         <footer
             className="w-full"
             style={{
-                background: '#313131',
-                borderRadius: '24px',
-                padding: '0 60px',
-                height: '252px',
+                background: '#FFFFFF', // Same white as navbar
+                border: '1px solid rgba(217, 217, 217, 0.3)', // Same border as navbar
+                borderRadius: '45px', // Match navbar border radius roughly
+                padding: '20px 36px', // Smaller padding
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'flex-end',
+                justifyContent: 'space-between',
                 maxWidth: '1280px',
                 margin: '0 auto',
                 boxSizing: 'border-box',
+                flexWrap: 'wrap', // In case on mobile
+                gap: '16px', // Add gap for mobile wrap
             }}
         >
-            <div className="flex flex-col" style={{ gap: '30px' }}>
+            {/* Left Section */}
+            <div className="flex flex-col" style={{ gap: '4px' }}>
+                <span
+                    style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 700,
+                        fontSize: '24px', // Smaller font size
+                        color: '#2A2438',
+                        lineHeight: '1.2',
+                    }}
+                >
+                    See you!👋
+                </span>
+                <a
+                    href="mailto:lyna.seridji@gmail.com"
+                    className="no-underline"
+                    style={{
+                        fontFamily: "'Inter', sans-serif",
+                        fontWeight: 400,
+                        fontSize: '15px', // Smaller font size
+                        color: '#2A2438',
+                        cursor: 'pointer',
+                    }}
+                >
+                    lyna.seridji@gmail.com
+                </a>
+            </div>
+
+            {/* Right Section */}
+            <div className="flex items-center" style={{ gap: '24px' }}>
                 {/* LinkedIn Link */}
                 <motion.a
                     href="https://www.linkedin.com/in/lyna-seridji"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-end no-underline"
-                    style={{ gap: '12px' }}
-                    whileHover={{ opacity: 0.8 }}
+                    className="flex items-center no-underline"
+                    style={{ gap: '6px' }}
+                    whileHover={{ opacity: 0.7 }}
                 >
                     <span
                         style={{
                             fontFamily: "'Inter', sans-serif",
-                            fontWeight: 600,
-                            fontSize: '26px',
-                            lineHeight: '31px',
-                            color: '#FFFFFF',
+                            fontWeight: 500,
+                            fontSize: '15px', // Smaller font size
+                            color: '#655F75',
                         }}
                     >
-                        Linkedin
+                        LinkedIn
                     </span>
-                    {/* Arrow icon */}
                     <svg
-                        width="35"
-                        height="35"
-                        viewBox="0 0 35 35"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 14 14"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         <path
-                            d="M10 25L25 10M25 10H12M25 10V23"
-                            stroke="white"
-                            strokeWidth="2"
+                            d="M3.5 10.5L10.5 3.5M10.5 3.5H4.5M10.5 3.5V9.5"
+                            stroke="#655F75"
+                            strokeWidth="1.5"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                         />
@@ -62,33 +91,31 @@ const Footer: React.FC = () => {
                     href="https://drive.google.com/file/d/1x-eHJhxqN30-BeOglUkfrMp2jQyNFhF2/view?usp=drive_link"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-end no-underline"
-                    style={{ gap: '12px' }}
-                    whileHover={{ opacity: 0.8 }}
+                    className="flex items-center no-underline"
+                    style={{ gap: '6px' }}
+                    whileHover={{ opacity: 0.7 }}
                 >
                     <span
                         style={{
                             fontFamily: "'Inter', sans-serif",
-                            fontWeight: 600,
-                            fontSize: '26px',
-                            lineHeight: '31px',
-                            color: '#FFFFFF',
+                            fontWeight: 500,
+                            fontSize: '15px', // Smaller font size
+                            color: '#655F75',
                         }}
                     >
                         Resume
                     </span>
-                    {/* Arrow icon */}
                     <svg
-                        width="35"
-                        height="35"
-                        viewBox="0 0 35 35"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 14 14"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                     >
                         <path
-                            d="M10 25L25 10M25 10H12M25 10V23"
-                            stroke="white"
-                            strokeWidth="2"
+                            d="M3.5 10.5L10.5 3.5M10.5 3.5H4.5M10.5 3.5V9.5"
+                            stroke="#655F75"
+                            strokeWidth="1.5"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                         />

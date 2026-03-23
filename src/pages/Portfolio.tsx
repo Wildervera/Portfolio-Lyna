@@ -10,7 +10,8 @@ import {
     NavDots,
     Hero,
     TestimonialsSection,
-    ProjectDetail
+    ProjectDetail,
+    Footer
 } from '../components';
 import { CustomCursor } from '../components/CustomCursor';
 import { Project } from '../types';
@@ -445,6 +446,11 @@ export const Portfolio: React.FC<{ isWorkPage?: boolean }> = ({ isWorkPage = fal
                         </SectionObserver>
                     );
                 })}
+
+                {/* Footer */}
+                <div className="w-full relative flex justify-center pb-12 pt-10" style={{ paddingLeft: '24px', paddingRight: '24px' }}>
+                    <Footer />
+                </div>
             </main>
 
             {/* NavDots — hidden on Hero section */}

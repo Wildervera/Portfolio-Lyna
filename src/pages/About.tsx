@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Header } from '../components';
+import { Header, Footer } from '../components';
 import { CustomCursor } from '../components/CustomCursor';
 import { GLOBAL_STYLES } from '../styles/global';
 
@@ -240,8 +240,10 @@ export const About: React.FC = () => {
         </div>
       </section>
 
-      {/* Footer Spacing */}
-      <div className="h-20"></div>
+      {/* Footer */}
+      <div className="w-full flex justify-center pb-12 pt-10" style={{ paddingLeft: '24px', paddingRight: '24px' }}>
+        <Footer />
+      </div>
     </div>
   );
 };

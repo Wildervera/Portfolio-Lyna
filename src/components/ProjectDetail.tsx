@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, X, Target, User, Check, TrendingUp, Key, ArrowUp, ArrowDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Project, KeyFinding, ContentSection, ProjectTeam } from '../types';
 import { PROJECTS } from '../data/projects';
+import Footer from './Footer';
 
 const FadeIn: React.FC<{
   children: React.ReactNode;
@@ -2410,6 +2411,10 @@ const ProjectDetail: React.FC<ProjectDetailProps> = ({ project, onBack, onProjec
           </div>
         </section>
 
+        {/* Global Footer */}
+        <div className="w-full relative flex justify-center pb-12 pt-10" style={{ paddingLeft: '24px', paddingRight: '24px' }}>
+          <Footer />
+        </div>
       </div>
     </div>
   );
