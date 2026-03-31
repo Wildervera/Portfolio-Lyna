@@ -194,12 +194,11 @@ const PersonaCard: React.FC<{ icon: string; title: string; subtitle: string; des
   icon, title, subtitle, description, accentColor
 }) => (
   <div
-    className="relative flex flex-col items-center"
+    className="relative flex flex-col items-center border border-gray-300"
     style={{
       width: 'clamp(260px, 32.8vw, 336px)',
       height: 'clamp(280px, 34.6vw, 354px)',
       background: '#FFFFFF',
-      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
       borderRadius: '24px',
       boxSizing: 'border-box' as const,
     }}

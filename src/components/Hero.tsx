@@ -14,7 +14,7 @@ const HERO_LAYOUT = {
   /** Nombre "Seridji" — posición independiente (DESKTOP) */
   nameSeridji: { left: '60%', top: '45%' },
 
-  /** Párrafo "I solve complex product problem..." (DESKTOP) */
+  /** Párrafo "I'm an overthinker, which helps me catch..." (DESKTOP) */
   paragraph: { left: '10%', bottom: '10%', maxWidth: '280px' },
 
   /** Párrafo (MOBILE/TABLET) */
@@ -78,7 +78,7 @@ const Hero: React.FC = () => {
               visible: { transition: { staggerChildren: 0.25, delayChildren: 0.3 } }
             }}
           >
-            {"I solve complex product problem by aligning business goals, user needs, and scalable systems.".split(" ").map((word, i) => (
+            {"I'm an overthinker, which helps me catch what others often miss and turn complexity into intuitive experiences.".split(" ").map((word, i) => (
               <motion.span
                 key={i}
                 style={{ marginRight: "0.25em" }}
@@ -253,7 +253,7 @@ const Hero: React.FC = () => {
               visible: { transition: { staggerChildren: 0.25, delayChildren: 0.3 } }
             }}
           >
-            {"I solve complex product problem by aligning business goals, user needs, and scalable systems.".split(" ").map((word, i) => (
+            {"I'm an overthinker, which helps me catch what others often miss and turn complexity into intuitive experiences.".split(" ").map((word, i) => (
               <motion.span
                 key={i}
                 style={{ marginRight: "0.25em" }}

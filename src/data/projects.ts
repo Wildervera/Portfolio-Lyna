@@ -15,9 +15,9 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 1,
-    title: 'From Engineering Concept to Scalable Product',
+    title: 'From Engineering Concept to MVP',
     tags: ['SaaS Platform', 'Healthcare', 'B2B'],
-    description: 'From 0 to 1: AI-Driven System Simplifying Insurance & Billing Workflows for DME/HME Providers',
+    description: 'From 0 to 1: AI-Driven System Simplifying Insurance & Billing Workflows for Medical Equipment Providers',
     cta: 'SEE CASE STUDY',
     backgroundColor: '#3C416C',
     textColor: '#ffffff',
@@ -29,8 +29,8 @@ export const PROJECTS: Project[] = [
     mockup: '/projets/thumbnail notable copy.webp',
     fullContent: 'In this project, we focused on streamlining the clinician workflow by reducing the steps required for data entry by 40%. The design system utilized high-contrast typography and subtle elevation to distinguish between critical and non-critical patient data.',
     caseStudy: {
-      heroTitle: 'From Engineering Concept to Scalable Product',
-      heroSubtitle: 'From 0 to 1: AI-Driven System Simplifying Insurance & Billing Workflows for DME/HME Providers',
+      heroTitle: 'From Engineering Concept to MVP',
+      heroSubtitle: 'From 0 to 1: AI-Driven System Simplifying Insurance & Billing Workflows for Medical Equipment Providers',
       heroImage: '/projets/thumbnail notable copy.webp',
       projectInfo: [
         { label: 'Timeline', value: '1.5 month' },
@@ -56,12 +56,12 @@ export const PROJECTS: Project[] = [
         context: {
           icon: 'info',
           title: 'Context',
-          description: 'This project focused on creating a system designed to help DME/HME providers manage the medical equipment they supply to patients at home. The system uses AI to reduce errors in insurance claims, billing, and payments by automating data entry and catching missing information early.'
+          description: 'This project focused on creating a system designed to help Medical Equipment Providers manage the medical equipment they supply to patients at home. The system uses AI to reduce errors in insurance claims, billing, and payments by automating data entry and catching missing information early.'
         },
         problem: {
           icon: 'x',
           title: 'Problem',
-          description: 'The engineer prototype suffered from cognitive overload. Friction in the UI increased data entry errors, which directly caused revenue loss for DME/HME.'
+          description: 'The engineer prototype suffered from cognitive overload. Friction in the UI increased data entry errors, which directly caused revenue loss for Medical Equipment Providers.'
         },
         goal: {
           icon: 'target',
