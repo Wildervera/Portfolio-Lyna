@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Briefcase, MapPin, Star } from 'lucide-react';
+import { Briefcase, Layers, Star } from 'lucide-react';
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * CONFIGURACIÓN DE POSICIONAMIENTO - Modifica estos valores para mover los elementos
@@ -20,14 +20,14 @@ const HERO_LAYOUT = {
   /** Párrafo (MOBILE/TABLET) */
   paragraphMobile: { right: '4vw', top: '24%', maxWidth: '31vw' },
 
-  /** Píldora "3+ years of experience" */
+  /** Píldora "4+ years of experience" */
   pillExperience: { right: '3%', top: '65%' },
 
   /** Píldora "B2B|B2C|Saas" */
   pillB2B: { right: '9%', top: '75%' },
 
-  /** Píldora "Based in Medellin" */
-  pillMedellin: { right: '2%', top: '85%' },
+  /** Píldora "End-to-end Designer" */
+  pillEndToEnd: { right: '2%', top: '85%' },
 
   /** Contenedor de píldoras en móvil (vertical/horizontal) */
   pillsMobile: {
@@ -182,7 +182,7 @@ const Hero: React.FC = () => {
                 >
                   <Star size="55%" strokeWidth={2.5} fill="currentColor" />
                 </div>
-                3+ years of experience
+                4+ years of experience
               </motion.span>
             </motion.div>
             <motion.div
@@ -203,9 +203,9 @@ const Hero: React.FC = () => {
                   className="flex items-center justify-center bg-[#0AA2FF] rounded-full text-[#DBF0FF]"
                   style={{ width: 'clamp(24px, 6vw, 36px)', height: 'clamp(24px, 6vw, 36px)', minWidth: '20px', minHeight: '20px' }}
                 >
-                  <MapPin size="55%" strokeWidth={2.5} />
+                  <Layers size="55%" strokeWidth={2.5} />
                 </div>
-                Based in Medellin
+                End-to-end Designer
               </motion.span>
             </motion.div>
             <motion.div
@@ -311,7 +311,7 @@ const Hero: React.FC = () => {
               >
                 <Star size="55%" strokeWidth={2.5} fill="currentColor" />
               </div>
-              3+ years of experience
+              4+ years of experience
             </motion.div>
           </motion.div>
 
@@ -355,8 +355,8 @@ const Hero: React.FC = () => {
           <motion.div
             className="absolute pointer-events-auto cursor-pointer"
             style={{
-              right: HERO_LAYOUT.pillMedellin.right,
-              top: HERO_LAYOUT.pillMedellin.top,
+              right: HERO_LAYOUT.pillEndToEnd.right,
+              top: HERO_LAYOUT.pillEndToEnd.top,
             }}
             variants={{
               hidden: { opacity: 0, scale: 0.8, x: "140vw", y: -120, rotate: -45 },
@@ -381,9 +381,9 @@ const Hero: React.FC = () => {
                 className="flex items-center justify-center bg-[#0AA2FF] rounded-full text-[#DBF0FF]"
                 style={{ width: 'clamp(22px, 3.125vw, 32px)', height: 'clamp(22px, 3.125vw, 32px)' }}
               >
-                <MapPin size="55%" strokeWidth={2.5} />
+                <Layers size="55%" strokeWidth={2.5} />
               </div>
-              Based in Medellin
+              End-to-end Designer
             </motion.div>
           </motion.div>
         </motion.div>

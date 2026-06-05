@@ -92,7 +92,7 @@ export const About: React.FC = () => {
               <div className="flex-1 space-y-6">
                 <div className="space-y-5 text-gray-700 text-base md:text-lg leading-relaxed">
                   <p>
-                    I'm a French Product Designer based in Colombia with about 3+ years
+                    I'm a French Product Designer based in Colombia with about 4+ years
                     of experience launching products in startups, E-commerce, and helping
                     scale ups grow.
                   </p>
